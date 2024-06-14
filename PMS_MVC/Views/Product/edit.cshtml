@@ -1,0 +1,130 @@
+﻿@model PMS_MVC.Models.EditProduct;
+@{
+    ViewData["Title"] = "Edit Product";
+}
+@{
+    string ImagePATH = Model.FileName;
+    string ImageURL = "https://localhost:44390/UploadDocuments/"+Model.FileName;
+}
+
+<!-- Edit Product Form -->
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="shadow-lg rounded bg-white p-4 w-100" style="max-width: 600px;">
+
+        <div class="editformTitle mt-3"><p><strong>Edit Product</strong></p></div>
+        <form asp-action="Edit" asp-controller="Product" asp-route-ProductId="@Model.ProductId" method="post" class="dark-mode2" id="editProductForm" enctype="multipart/form-data">
+            <input type="hidden"  asp-for="@Model.ProductId"/>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-floating">
+                        <input value="@Model.ProductName" asp-for="@Model.ProductName" type="text" class="form-control" placeholder="Name">
+                        <label asp-for="@Model.ProductName">Product Name</label>
+                        <span asp-validation-for="@Model.ProductName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea style="height:8rem" value="@Model.Description" asp-for="@Model.Description" type="text" class="form-control" placeholder=" "></textarea>
+                        <label asp-for="@Model.Description">Product's Description</label>
+                        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-floating">
+                        <input value="@Model.Price" asp-for="@Model.Price" type="number" class="form-control" placeholder="Price">
+                        <label asp-for="@Model.Price">Product Price</label>
+                        <span asp-validation-for="@Model.Price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <span class="me-2">Category Tag:</span>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="TagRadios" id="exampleRadios1" value="Small" @(Model.CategoryTag == "Small" ? "checked" : "")>
+                        <label class="form-check-label" for="exampleRadios1">Small</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="TagRadios" id="exampleRadios2" value="Medium" @(Model.CategoryTag == "Medium" ? "checked" : "")>
+                        <label class="form-check-label" for="exampleRadios2">Medium</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="TagRadios" id="exampleRadios3" value="Large" @(Model.CategoryTag == "Large" ? "checked" : "")>
+                        <label class="form-check-label" for="exampleRadios3">Large</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <p>Product Image</p>
+                    <div class="file-upload d-flex justify-content-between">
+                        <input type="file" class="form-control" asp-for="@Model.Fileupload" id="myFile" placeholder=" ">
+
+                        <span asp-validation-for="@Model.Fileupload" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-floating">
+                        <select value="@Model.CategoryId" asp-for="@Model.CategoryId" class="form-control" id="courseselect" placeholder=" " aria-label="state">
+                            <option hidden value="">Course</option>
+                            @foreach (var category in Model.categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                        <label asp-for="@Model.CategoryId">Category</label>
+                        <span asp-validation-for="@Model.CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            @if (Model.FileName != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <p>Product Image</p>
+                        <img src="@ImageURL" alt="@Model.ProductName" style="height:5rem; width:20rem;" class="img-fluid" />
+                    </div>
+                </div>
+
+                <div class="row mb-3 ms-3 col-md-4">
+                    <button onclick="removeProductImage(@Model.ProductId)" id="removeImage" class="btn btn-danger">Remove Image</button>
+                </div>
+            }
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <button onclick="location.href='@Url.Action("list", "product")'" type="button" class="btn btn-info text-white w-100" data-bs-dismiss="modal">Cancel</button>
+                </div>
+                <div class="col-6 mb-3">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success text-white w-100">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+<script>
+    const fileInput = document.getElementById('myFile');
+    const fileNameDisplay = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            fileNameDisplay.textContent = selectedFile.name;
+        } else {
+            fileNameDisplay.textContent = 'No file chosen';
+        }
+    });
+</script>

@@ -1,0 +1,89 @@
+﻿@model PMS_MVC.Models.AddProduct;
+
+@{
+    ViewData["Title"] = "Product List";
+}
+<!-- Search Product Props. -->
+<div class="container ProductList">
+    <div class="row">
+        <h4 class="text-info">Product List:</h4>
+        <div class="col-md-4  mb-3">
+            <div class="form-floating">
+                <input class="form-control dark-mode2" type="text" placeholder="Search Product" aria-label="Search" id="searchProduct" onkeyup="searchProcudtName()" maxlength="25">
+                <label for="searchProduct" class="ms-2">Search Product</label>
+            </div>
+        </div>
+        <div class="col-md-4  mb-3">
+            <div class="form-floating">
+                <select class="form-select ProfessionsDropdown" id="searchCategoryTag" onchange="searchCategoryTag()">
+                    <option value="">All CategoryTag</option>
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+                <label for="searchCategoryTag" class="ms-2 d-none" hidden> </label>
+            </div>
+        </div>
+       @*  <div class="col-md-4  mb-3">
+            <div class="form-floating">
+                <select class="form-select ProfessionsDropdown" id="searchCategory" onchange="searchProductCategory()">
+                    <option value="0">All Category</option>
+                    @foreach (var category in Model.categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <label for="searchCategoryTag" class="ms-2 d-none" hidden> </label>
+            </div>
+        </div> *@
+        <div class="col-md-12  mb-3">
+            <div class="form-floating">
+                <input class="form-control dark-mode2" type="text" placeholder="Provider Name" aria-label="Search" id="searchDescription" onkeyup="searchDescription()" maxlength="499">
+                <label for="searchDescription" class="ms-2">Description</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <button data-toggle="tooltip" data-placement="top" id="categoryProductClear" title="Clear Search" class="btn btn-outline-danger">
+                <i class="bi bi-backspace"></i>
+            </button>
+            <button data-toggle="tooltip" data-placement="top" title="Add" onclick="location.href='@Url.Action("add","product")'" class="btn btn-success" id="AddProduct">
+                <i class="bi bi-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" id="productListdata">
+            @* <partial name="productshared" /> *@
+        </div>
+    </div>
+
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    $(document).ready(function () {
+        $('#productListdata').load("/product/productShared");
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).on('click', '#categoryProductClear', function () {
+        $('#searchProduct').val('');
+        $('#searchCategoryTag').val('');
+        $('#searchCategory').val(0);
+        $('#searchDescription').val('');
+        $('#productListdata').load("/product/productShared");
+    });
+</script>
+
+<style>
+    .button-container {
+        display: inline-block;
+    }
+
+    .inline-button {
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+</style>
