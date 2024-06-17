@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using PMS_MVC.Models;
 using System.Text;
+using System.Web;
 
 namespace PMS_MVC.Controllers
 {
@@ -19,10 +20,66 @@ namespace PMS_MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ProductShared()
+        //public async Task<IActionResult> ProductShared()
+        //{
+        //    List<AddProduct> productList = new List<AddProduct>();
+        //    HttpResponseMessage response = client.GetAsync(client.BaseAddress + "product/getallproducts").Result;
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        string data = await response.Content.ReadAsStringAsync();
+        //        productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
+        //    }
+
+
+        //    return PartialView("ProductShared", productList);
+        //}
+
+        //public async Task<IActionResult> ProductShared(SearchFilter searchFilter)
+        //{
+        //    string productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1" ;
+        //    string productPageSize = HttpContext.Session.GetString("pageSize") ?? "5" ;
+        //    List<AddProduct> productList = new List<AddProduct>();
+        //    var query = HttpUtility.ParseQueryString(string.Empty);
+        //    query["searchProduct"] = searchFilter.searchProduct;
+        //    query["searchCategoryTag"] = searchFilter.searchCategoryTag;
+        //    query["searchDescription"] = searchFilter.searchDescription;
+        //    query["productPageNumber"] = productPageNumber;
+        //    query["productPageSize"] = productPageSize;
+
+        //    string queryString = query.ToString();
+
+        //    HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        string data = await response.Content.ReadAsStringAsync();
+        //        productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
+        //    }
+
+        //    PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
+
+        //    return PartialView("ProductShared", products);
+        //}
+
+
+
+        public async Task<IActionResult> ProductShared(SearchFilter searchFilter)
         {
+            string productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1";
+            string productPageSize = HttpContext.Session.GetString("pageSize") ?? "5";
+
             List<AddProduct> productList = new List<AddProduct>();
-            HttpResponseMessage response = client.GetAsync(client.BaseAddress + "product/getallproducts").Result;
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["searchProduct"] = searchFilter.searchProduct;
+            query["searchCategoryTag"] = searchFilter.searchCategoryTag;
+            query["searchDescription"] = searchFilter.searchDescription;
+            query["productPageNumber"] = productPageNumber;
+            query["productPageSize"] = productPageSize;
+
+            string queryString = query.ToString();
+
+            HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
 
             if (response.IsSuccessStatusCode)
             {
@@ -30,9 +87,15 @@ namespace PMS_MVC.Controllers
                 productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
             }
 
+            PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
 
-            return PartialView("ProductShared", productList);
+            return PartialView("ProductShared", products);
         }
+
+
+
+
+
 
         public async Task<IActionResult> Add()
         {
@@ -136,7 +199,40 @@ namespace PMS_MVC.Controllers
             return View(editProduct);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            EditProduct editProduct = new EditProduct();
 
+            try
+            {
+                // Get product details
+                HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    editProduct = JsonConvert.DeserializeObject<EditProduct>(data);
+
+                    if (editProduct == null)
+                    {
+                        // Handle null deserialization
+                        return StatusCode(500, "Error deserializing product data.");
+                    }
+                }
+                else
+                {
+                    // Handle unsuccessful status code
+                    return StatusCode((int)response.StatusCode, "Error retrieving product data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+
+            return View(editProduct);
+        }
 
         [HttpPost]
         public async Task<ActionResult> Edit([FromForm] EditProduct editProduct, int id, string TagRadios)
@@ -202,28 +298,7 @@ namespace PMS_MVC.Controllers
             }
         }
 
-        //public async Task<ActionResult> Delete(int id)
-        //{
-        //    try
-        //    {
-        //        string data = JsonConvert.SerializeObject(id);
-        //        //StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-        //        HttpResponseMessage response =await client.PostAsync(client.BaseAddress + "product/delete" + id);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            TempData["success"] = "Product deleted successfully!";
-        //            return RedirectToAction("list");
-        //        }
-        //        TempData["error"] = "Product deleted successfully!";
-        //        return View();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, "Internal server error."); 
-        //    }
-        //}
+        
 
         public async Task<ActionResult> Delete(int id)
         {
@@ -258,6 +333,60 @@ namespace PMS_MVC.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        public async Task<IActionResult> RemoveProductImage(int id)
+        {
+            try
+            {
+                // Serialize the id
+                string data = JsonConvert.SerializeObject(id);
+                // Create StringContent
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                // Make the API call
+                HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "product/deleteimage/" + id, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["success"] = "Product's image deleted successfully!";
+                    return RedirectToAction("list");
+                }
+                else
+                {
+                    // Log the status code and response content for debugging
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
+
+                    TempData["error"] = "Error deleting product!";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        public JsonResult ChangePage(int productPageNumber)
+        {
+            if (productPageNumber != 0)
+            {
+                HttpContext.Session.SetString("pageNumber", productPageNumber.ToString());
+            }
+            return Json(new { success = true });
+        }
+
+        public JsonResult ChangePageSize(int pageSize)
+        {
+            if (pageSize != 0)
+            {
+                HttpContext.Session.SetString("pageSize", pageSize.ToString());
+                ChangePage(1);
+            }
+            return Json(new { success = true });
+        }
+
 
 
 

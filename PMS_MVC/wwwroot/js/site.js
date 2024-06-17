@@ -10,6 +10,14 @@ function handleDeleteProductClick() {
     });
 }
 
+function handleDeleteCategoryClick() {
+    $(document).on('click', '.deleteCategory', function () {
+        $("#delCategoryModal").modal("show");
+        $("#CategoryIdVal").val($(this).closest('.tr').data('rid'));
+        // Add any additional logic here if needed
+    });
+}
+
 function validateForm() {
     var fileInput = document.getElementById("myFile");
     var file = fileInput.files[0];
@@ -38,3 +46,125 @@ function validateForm() {
 
     return true; // Form submission allowed if all validations pass
 }
+
+function searchCategory() {
+
+    var searchName = $("#searchCategoryTab").val();
+    var searchCode = $("#searchCategoryCodeTab").val();
+    var description = $("#searchCategoryDescription").val();
+    //console.log(searchName);
+
+    let url = '/Category/listshared';
+    $.ajax({
+        url: url,
+        data: { searchName: searchName, searchCode: searchCode, description: description },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#categoryListdata").html(result);
+        }
+    });
+}
+
+function searchProcudtName() {
+
+    var searchProduct = $("#searchProduct").val();
+    var searchCategoryTag = $("#searchCategoryTag").val();
+    var searchDescription = $("#searchDescription").val();
+    var searchCategory = $("#searchCategory").val();
+    //console.log(searchProduct);
+
+    let url = '/Product/productShared';
+    $.ajax({
+        url: url,
+        data: { searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchDescription: searchDescription, searchCategory: searchCategory },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#productListdata").html(result);
+        }
+    });
+}
+
+function searchCategoryTag() {
+    var searchCategoryTag = $("#searchCategoryTag").val();
+    var searchProduct = $("#searchProduct").val();
+    var searchDescription = $("#searchDescription").val();
+    var searchCategory = $("#searchCategory").val();
+    //console.log(searchCategoryTag);
+
+    let url = '/Product/productShared';
+    $.ajax({
+        url: url,
+        data: { searchCategoryTag: searchCategoryTag, searchProduct: searchProduct, searchDescription: searchDescription, searchCategory: searchCategory },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#productListdata").html(result);
+        }
+    });
+}
+
+function searchDescription() {
+    var searchDescription = $("#searchDescription").val();
+    var searchProduct = $("#searchProduct").val();
+    var searchCategoryTag = $("#searchCategoryTag").val();
+    var searchCategory = $("#searchCategory").val();
+    console.log(searchDescription);
+    console.log(searchProduct);
+    console.log(searchCategoryTag);
+
+    let url = '/Product/productShared';
+    $.ajax({
+        url: url,
+        data: { searchDescription: searchDescription, searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchCategory: searchCategory },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#productListdata").html(result);
+        }
+    });
+}
+
+
+function removeProductImage(id) {
+    console.log(id);
+    let url = '/Product/RemoveProductImage'
+    $.ajax({
+        url: url,
+        data: { id: id },
+        success: function (response) {
+            window.location.reload();
+        }
+    });
+}
+
+function changeProductpagesize() {
+    console.log("hi")
+    var catPageSize = $("#prodpagesize").val();
+    $.ajax({
+        url: "ChangePageSize",
+        data: { pageSize: catPageSize },
+        success: function (response) {
+            if (response.success) {
+                $("#productListdata").load("productShared");
+                //window.location.reload();
+            }
+        }
+    });
+}
+
+function changeProductpage(productPageNumber) {
+    console.log(productPageNumber);
+    $.ajax({
+        url: "ChangePage",
+        data: { productPageNumber: productPageNumber },
+        success: function (response) {
+            if (response.success) {
+                $("#productListdata").load("productShared");
+                //window.location.reload();
+            }
+        }
+    });
+}
+

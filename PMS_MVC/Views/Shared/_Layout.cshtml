@@ -35,7 +35,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="list">Product</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Category</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="list">Category</a>
                         </li>
                     </ul>
                 </div>
@@ -45,7 +45,7 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
-            <partial name="_Notification" />
+            @* <partial name="_Notification" /> *@
         </main>
     </div>
 

@@ -1,0 +1,65 @@
+﻿<partial name="_Notification" />
+@{
+    ViewData["Title"] = "Category List";
+}
+<!-- Category List Search Props. -->
+<div id="CategoryList" class="container mt-3">
+    <div class="row">
+        <h4 class="text-info">Category List:</h4>
+        <div class="col-md-6 mb-3">
+            <div class="form-floating">
+                <input class="form-control dark-mode2" type="text" placeholder="Category Name" aria-label="Search" id="searchCategoryTab" onkeyup="searchCategory()" maxlength="25">
+                <label for="searchCategoryTab" class="ms-2">Search Name</label>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="form-floating">
+                <input class="form-control dark-mode2" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Category Code" aria-label="Search" id="searchCategoryCodeTab" maxlength="5" onkeyup="searchCode()">
+                <label for="searchCategoryCodeTab" class="ms-2">Search Code</label>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="form-floating">
+                <input class="form-control dark-mode2" type="text" placeholder="Description" aria-label="Search" id="searchCategoryDescription" onkeyup="searchCategoryDescription()" maxlength="250">
+                <label for="searchCategoryDescription" class="ms-2">Search Description</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <button data-toggle="tooltip" data-placement="top" id="categoryListClear" title="Clear Search" class="btn btn-outline-danger">
+                <i class="bi bi-backspace"></i>
+            </button>
+            <button data-toggle="tooltip" data-placement="top" title="Add" onclick="location.href='@Url.Action("save", "category", new { type = true })'" class="btn btn-success">
+                <i class="bi bi-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="categoryListdata" class="row">
+        @* <partial name="listshared" /> *@
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#categoryListdata').load("/category/listshared");
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).on('click', '#categoryListClear', function () {
+        $('#searchCategoryTab').val('');
+        $('#searchCategoryCodeTab').val('');
+        $('#searchCategoryDescription').val('');
+        $('#categoryListdata').load("/category/listshared");
+    });
+</script>
+
+<style>
+    .button-container {
+        display: inline-block;
+    }
+
+    .inline-button {
+        display: inline-block;
+        margin-right: 5px; /* Adjust spacing as needed */
+    }
+</style>
