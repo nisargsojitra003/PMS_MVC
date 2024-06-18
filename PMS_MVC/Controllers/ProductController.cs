@@ -20,62 +20,19 @@ namespace PMS_MVC.Controllers
             return View();
         }
 
-        //public async Task<IActionResult> ProductShared()
-        //{
-        //    List<AddProduct> productList = new List<AddProduct>();
-        //    HttpResponseMessage response = client.GetAsync(client.BaseAddress + "product/getallproducts").Result;
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        string data = await response.Content.ReadAsStringAsync();
-        //        productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
-        //    }
-
-
-        //    return PartialView("ProductShared", productList);
-        //}
-
-        //public async Task<IActionResult> ProductShared(SearchFilter searchFilter)
-        //{
-        //    string productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1" ;
-        //    string productPageSize = HttpContext.Session.GetString("pageSize") ?? "5" ;
-        //    List<AddProduct> productList = new List<AddProduct>();
-        //    var query = HttpUtility.ParseQueryString(string.Empty);
-        //    query["searchProduct"] = searchFilter.searchProduct;
-        //    query["searchCategoryTag"] = searchFilter.searchCategoryTag;
-        //    query["searchDescription"] = searchFilter.searchDescription;
-        //    query["productPageNumber"] = productPageNumber;
-        //    query["productPageSize"] = productPageSize;
-
-        //    string queryString = query.ToString();
-
-        //    HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        string data = await response.Content.ReadAsStringAsync();
-        //        productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
-        //    }
-
-        //    PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
-
-        //    return PartialView("ProductShared", products);
-        //}
-
-
-
-        public async Task<IActionResult> ProductShared(SearchFilter searchFilter)
+        public async Task<ActionResult<AddProduct>> ProductShared(SearchFilter searchFilter)
         {
-            string productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1";
-            string productPageSize = HttpContext.Session.GetString("pageSize") ?? "5";
+            searchFilter.productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1";
+            searchFilter.productPageSize = HttpContext.Session.GetString("pageSize") ?? "5";
+            int totalRecords = 0;
 
             List<AddProduct> productList = new List<AddProduct>();
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["searchProduct"] = searchFilter.searchProduct;
             query["searchCategoryTag"] = searchFilter.searchCategoryTag;
             query["searchDescription"] = searchFilter.searchDescription;
-            query["productPageNumber"] = productPageNumber;
-            query["productPageSize"] = productPageSize;
+            query["productPageNumber"] = searchFilter.productPageNumber;
+            query["productPageSize"] = searchFilter.productPageSize;
 
             string queryString = query.ToString();
 
@@ -83,13 +40,18 @@ namespace PMS_MVC.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                string data = await response.Content.ReadAsStringAsync();
-                productList = JsonConvert.DeserializeObject<List<AddProduct>>(data);
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
+                productList = responseObject.productList.ToObject<List<AddProduct>>();
+                totalRecords = responseObject.totalProducts;
             }
 
-            PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
+            var totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.productPageSize));
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = int.Parse(searchFilter.productPageNumber);
+            //PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
 
-            return PartialView("ProductShared", products);
+            return PartialView("ProductShared", productList);
         }
 
 
@@ -377,11 +339,11 @@ namespace PMS_MVC.Controllers
             return Json(new { success = true });
         }
 
-        public JsonResult ChangePageSize(int pageSize)
+        public JsonResult ChangePageSize(int pageSizeProduct)
         {
-            if (pageSize != 0)
+            if (pageSizeProduct != 0)
             {
-                HttpContext.Session.SetString("pageSize", pageSize.ToString());
+                HttpContext.Session.SetString("pageSize", pageSizeProduct.ToString());
                 ChangePage(1);
             }
             return Json(new { success = true });

@@ -3,12 +3,12 @@
     public class SearchFilter
     {
         //Category List property of Search filter.
-        //public string? searchName { get; set; }
-        //public string? SearchCode { get; set; }
-        //public string? description { get; set; }
-        //public int? sortType { get; set; }
-        //public string? categoryPageSize { get; set; }
-        //public string? categoryPageNumber { get; set; }
+        public string? searchName { get; set; }
+        public string? SearchCode { get; set; }
+        public string? description { get; set; }
+        public int? sortType { get; set; }
+        public string? categoryPageSize { get; set; }
+        public string? categoryPageNumber { get; set; }
 
         //Product List Property of Search filter.
         public string? searchProduct { get; set; }

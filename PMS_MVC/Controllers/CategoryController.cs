@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using PMS_MVC.Models;
 using System.Text;
+using System.Web;
 
 namespace PMS_MVC.Controllers
 {
@@ -19,16 +20,37 @@ namespace PMS_MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> listshared()
+        public async Task<ActionResult<Category>> listshared(SearchFilter searchFilter)
         {
+            searchFilter.categoryPageNumber = HttpContext.Session.GetString("catPageNumber") ?? "1";
+            searchFilter.categoryPageSize = HttpContext.Session.GetString("catPageSize") ?? "5";
+            int totalRecords = 0;
+
             List<Category> categoriesList = new List<Category>();
-            HttpResponseMessage response = client.GetAsync(client.BaseAddress + "category/getallcategories").Result;
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["searchName"] = searchFilter.searchName;
+            query["SearchCode"] = searchFilter.SearchCode;
+            query["description"] = searchFilter.description;
+            query["categoryPageNumber"] = searchFilter.categoryPageNumber;
+            query["categoryPageSize"] = searchFilter.categoryPageSize;
+
+            string queryString = query.ToString();
+
+            HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "category/getallcategories?" + queryString);
 
             if (response.IsSuccessStatusCode)
             {
-                string data = await response.Content.ReadAsStringAsync();
-                categoriesList = JsonConvert.DeserializeObject<List<Category>>(data);
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
+                categoriesList = responseObject.categoriesList.ToObject<List<Category>>();
+                totalRecords = responseObject.totalRecords;
             }
+            var totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = int.Parse(searchFilter.categoryPageNumber);
+            //PagedList<Category> categories = new PagedList<Category>(categoriesList, categoriesList.Count(), int.Parse(categoryPageNumber), int.Parse(categoryPageSize));
+
+
             return PartialView("listshared", categoriesList);
         }
 
@@ -157,6 +179,26 @@ namespace PMS_MVC.Controllers
                 TempData["error"] = "An unexpected error occurred. Please contact your support team.";
                 return RedirectToAction("list");
             }
+        }
+
+        public JsonResult ChangePage(int pageNumberCategory)
+        {
+            if (pageNumberCategory != 0)
+            {
+                HttpContext.Session.SetString("catPageNumber", pageNumberCategory.ToString());
+            }
+            return Json(new { success = true });
+        }
+
+        public JsonResult ChangePageSize(int catPageSize)
+        {
+            HttpContext.Session.Clear();
+            if (catPageSize != 0)
+            {
+                HttpContext.Session.SetString("catPageSize", catPageSize.ToString());
+                ChangePage(1);
+            }
+            return Json(new { success = true });
         }
 
 

@@ -28,7 +28,7 @@
             AddRange(currentPage);
         }
 
-        public static async Task<PagedList<T>> CreateAsync(List<T> source, int count, int pageNumber, int pageSize)
+        public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int count, int pageNumber, int pageSize)
         {
 
             return new PagedList<T>(source, count, pageNumber, pageSize);

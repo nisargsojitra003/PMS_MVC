@@ -139,12 +139,13 @@ function removeProductImage(id) {
     });
 }
 
+//////////////Product Script////////////////////
 function changeProductpagesize() {
     console.log("hi")
-    var catPageSize = $("#prodpagesize").val();
+    var pageSizeProduct = $("#pagesizeProduct").val();
     $.ajax({
-        url: "ChangePageSize",
-        data: { pageSize: catPageSize },
+        url: "/Product/ChangePageSize",
+        data: { pageSizeProduct: pageSizeProduct },
         success: function (response) {
             if (response.success) {
                 $("#productListdata").load("productShared");
@@ -154,10 +155,11 @@ function changeProductpagesize() {
     });
 }
 
-function changeProductpage(productPageNumber) {
+
+function changePageInProductTable(productPageNumber) {
     console.log(productPageNumber);
     $.ajax({
-        url: "ChangePage",
+        url: "/Product/ChangePage",
         data: { productPageNumber: productPageNumber },
         success: function (response) {
             if (response.success) {
@@ -168,3 +170,109 @@ function changeProductpage(productPageNumber) {
     });
 }
 
+
+//////////Category Script////////////
+function changepagesize() {
+    console.log("hi")
+    var catPageSize = $("#pagesizeCategory").val();
+    $.ajax({
+        url: "/Category/ChangePageSize",
+        data: { catPageSize: catPageSize },
+        success: function (response) {
+            if (response.success) {
+                $("#categoryListdata").load("listshared");
+                //window.location.reload();
+            }
+        }
+    });
+}
+
+
+function changePageInTable(pageNumberCategory) {
+    console.log(pageNumberCategory);
+    $.ajax({
+        url: "/Category/ChangePage",
+        data: { pageNumberCategory: pageNumberCategory },
+        success: function (response) {
+            if (response.success) {
+                $("#categoryListdata").load("listshared");
+                //window.location.reload();
+            }
+        }
+    });
+}
+
+
+//function changeProductpagesize() {
+//    console.log("hi")
+//    var pageSize = $("#pagesize").val();
+//    $.ajax({
+//        url: "/Product/ChangePageSize",
+//        data: { pageSize: pageSize },
+//        success: function (response) {
+//            if (response.success) {
+//                $("#productListdata").load("productShared");
+//                //window.location.reload();
+//            }
+//        }
+//    });
+//}
+
+function searchCategory() {
+
+    var searchName = $("#searchCategoryTab").val();
+    var searchCode = $("#searchCategoryCodeTab").val();
+    var description = $("#searchCategoryDescription").val();
+    //console.log(searchName);
+
+    let url = '/Category/listshared';
+    $.ajax({
+        url: url,
+        data: { searchName: searchName, searchCode: searchCode, description: description },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#categoryListdata").html(result);
+        }
+    });
+}
+
+function searchCode() {
+
+    var searchCode = $("#searchCategoryCodeTab").val();
+    var searchName = $("#searchCategoryTab").val();
+    var description = $("#searchCategoryDescription").val();
+    //console.log(searchCode);
+
+    let url = '/Category/listshared';
+    $.ajax({
+        url: url,
+        data: { searchCode: searchCode, searchName: searchName, description: description },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#categoryListdata").html(result);
+        }
+    });
+}
+
+
+function searchCategoryDescription() {
+
+    var description = $("#searchCategoryDescription").val();
+    var searchName = $("#searchCategoryTab").val();
+    var searchCode = $("#searchCategoryCodeTab").val();
+
+    //console.log(description);
+
+    let url = '/Category/listshared';
+    $.ajax({
+        url: url,
+        data: { description: description, searchName: searchName, searchCode: searchCode },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#categoryListdata").html(result);
+        }
+    });
+}

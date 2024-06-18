@@ -1,31 +1,6 @@
 ﻿@using PMS_MVC.Models;
-@model PagedList<PMS_MVC.Models.AddProduct>
-@{
-    var list = Model.ToList();
-    int nextPage = 0, previousPage = 0;
-    if (Model.hasNext)
-    {
-        nextPage = Model.CurrentPage + 1;
-    }
-    if (Model.hasPrevious)
-    {
-        previousPage = Model.CurrentPage - 1;
-    }
-    int first = (Model.CurrentPage - 1) * Model.PageSize + 1;
-    if (Model.TotalCount == 0)
-    {
-        first = 0;
-    }
-    int last;
-    if (first + Model.PageSize - 1 > Model.TotalCount)
-    {
-        last = Model.TotalCount;
-    }
-    else
-    {
-        last = first + Model.PageSize - 1;
-    }
-}
+@model List<PMS_MVC.Models.AddProduct>
+
 <div class="container mt-4">
     <div class="table-responsive shadow-sm  mb-5 bg-body rounded" style="min-height:50vh">
         <table id="productManagementData" class="table table-striped table-hover mt-3 w-100 productManagementData">
@@ -118,50 +93,30 @@
         </table>
     </div>
 </div>
-@if (Model.Count > 0)
+@if (ViewBag.TotalPages > 0 && Model.Count() > 0)
 {
     <div class="d-flex justify-content-end align-items-center">
-        <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center">
             <p class="m-0">
                 Items per page
             </p>
-            <select asp-for="@Model.PageSize" class="mx-3 p-0" id="prodpagesize" onchange="changeProductpagesize()">
+            <select class="form-select mx-3 p-0" id="pagesizeProduct" onchange="changeProductpagesize()" style="width: auto;">
                 <option value="5">5</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
             </select>
         </div>
-        <div class="d-flex justify-content-center">
-            <p class="m-0">
-                @first - @last of @Model.TotalCount
-            </p>
-        </div>
-        <div>
-            <ul class="pagination justify-content-center m-0">
-                <li class="page-item mx-1">
-                    <button class="page-link rounded"
-                    @if (Model.hasPrevious)
-                    {
-                        <text>onclick="changeProductpage(@previousPage)"</text>
-                    }>
-                <i class="bi bi-chevron-left text-black"></i>
-            </button>
+        <ul class="pagination m-0">
+            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <button class="page-link" onclick="changePageInProductTable(@i)">@i</button>
                 </li>
-
-                <li class="page-item mx-1">
-                    <button class="page-link"
-                    @if (Model.hasNext)
-                    {
-                        <text>onclick="changeProductpage(@nextPage)"</text>
-                    }>
-                <i class="bi bi-chevron-right text-black"></i>
-            </button>
-                </li>
-            </ul>
-
-        </div>
+            }
+        </ul>
     </div>
+
 }
 else
 {

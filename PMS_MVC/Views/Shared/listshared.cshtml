@@ -1,4 +1,6 @@
-﻿@model IEnumerable<PMS_MVC.Models.Category>
+﻿@using PMS_MVC.Models;
+@model List<PMS_MVC.Models.Category>
+
 <div class="container mt-4">
     <div class="table-responsive shadow-sm p-3 mb-5 bg-body rounded">
         <!-- Category List table -->
@@ -82,7 +84,36 @@
         </table>
     </div>
 </div>
+<!-- Pagination -->
+@if (ViewBag.TotalPages > 0 && Model.Count()>0)
+{
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="d-flex align-items-center">
+            <p class="m-0">
+                Items per page
+            </p>
+            <select class="form-select mx-3 p-0" id="pagesizeCategory" onchange="changepagesize()" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+        <ul class="pagination m-0">
+            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <button class="page-link" onclick="changePageInTable(@i)">@i</button>
+                </li>
+            }
+        </ul>
+    </div>
 
+}
+else
+{
+    <p class="fw-bold align-items-center d-flex justify-content-center">No Records to display</p>
+}
 
 
 <!-- delete category modal -->
