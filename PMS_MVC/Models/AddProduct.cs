@@ -8,6 +8,7 @@ namespace PMS_MVC.Models
         public List<Category> categories { get; set; }
         public List<AddProduct> addProducts { get; set; }
         public int ProductId { get; set; }
+        public int? userId { get; set; }
 
         [Required(ErrorMessage = "ProductName is required")]
         [StringLength(40, ErrorMessage = "Only 40 Characters are Accepted")]

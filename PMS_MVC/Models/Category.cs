@@ -35,6 +35,6 @@ namespace PMS_MVC.Models
 
         public int? UserId { get; set; }
 
-        public bool? IsSystem { get; set; }
+        public bool IsSystem { get; set; }
     }
 }

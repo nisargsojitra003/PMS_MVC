@@ -172,7 +172,7 @@ function changePageInProductTable(productPageNumber) {
 
 
 //////////Category Script////////////
-function changepagesize() {
+function changePageSize() {
     console.log("hi")
     var catPageSize = $("#pagesizeCategory").val();
     $.ajax({
@@ -270,6 +270,21 @@ function searchCategoryDescription() {
         url: url,
         data: { description: description, searchName: searchName, searchCode: searchCode },
         type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#categoryListdata").html(result);
+        }
+    });
+}
+
+function CategoryFilter(sortType) {
+    var searchCode = $("#searchCategoryCodeTab").val();
+    var searchName = $("#searchCategoryTab").val();
+    var description = $("#searchCategoryDescription").val();
+    $.ajax({
+        url: 'listshared',
+        type: 'POST',
+        data: { sortType: sortType, searchCode: searchCode, searchName: searchName, description: description },
         success: function (result) {
             //console.log(result);
             $("#categoryListdata").html(result);

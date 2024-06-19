@@ -1,6 +1,9 @@
 ﻿@using PMS_MVC.Models;
 @model List<PMS_MVC.Models.Category>
-
+@inject IHttpContextAccessor Accessor
+@{
+    var userRole = @Accessor.HttpContext.Session.GetInt32("userId");
+}
 <div class="container mt-4">
     <div class="table-responsive shadow-sm p-3 mb-5 bg-body rounded">
         <!-- Category List table -->
@@ -56,8 +59,8 @@
                         <td>@(category.ModifiedAt?.ToString("dd-MM-yyyy hh:mm tt") ?? "")</td>
                         <td>@category.Description</td>
                         <td>
-                           @*  @if (!(bool)category.IsSystem)
-                            { *@
+                            @if (!category.IsSystem || userRole == 2)
+                            {
                                 <div class="btn-group ms-1 d-flex" role="group">
                                     <div class="ms-1">
                                         <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="location.href='@Url.Action("save", "category", new { Id = @category.Id })'" class="btn btn-warning btn-sm me-1">
@@ -75,7 +78,7 @@
                                         </button>
                                     </div>
                                 </div>
-                            @* } *@
+                            }
 
                         </td>
                     </tr>
@@ -92,7 +95,7 @@
             <p class="m-0">
                 Items per page
             </p>
-            <select class="form-select mx-3 p-0" id="pagesizeCategory" onchange="changepagesize()" style="width: auto;">
+            <select class="form-select mx-3 p-0" id="pagesizeCategory" onchange="changePageSize()" style="width: auto;">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="50">50</option>

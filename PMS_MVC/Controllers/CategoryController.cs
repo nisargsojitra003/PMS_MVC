@@ -10,20 +10,32 @@ namespace PMS_MVC.Controllers
     {
         Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
-        public CategoryController()
+        private readonly NotificationMessages NotificationMessages;
+        public CategoryController(NotificationMessages notificationMessages)
         {
             client = new HttpClient();
             client.BaseAddress = baseAddress;
+            NotificationMessages = notificationMessages;
         }
         public IActionResult list()
         {
-            return View();
+            string Token = HttpContext.Session.GetString("jwtToken");
+            if (!string.IsNullOrEmpty(Token))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("login", "login");
+            }
+            
         }
 
         public async Task<ActionResult<Category>> listshared(SearchFilter searchFilter)
         {
             searchFilter.categoryPageNumber = HttpContext.Session.GetString("catPageNumber") ?? "1";
             searchFilter.categoryPageSize = HttpContext.Session.GetString("catPageSize") ?? "5";
+            searchFilter.userId = HttpContext.Session.GetInt32("userId");
             int totalRecords = 0;
 
             List<Category> categoriesList = new List<Category>();
@@ -33,10 +45,20 @@ namespace PMS_MVC.Controllers
             query["description"] = searchFilter.description;
             query["categoryPageNumber"] = searchFilter.categoryPageNumber;
             query["categoryPageSize"] = searchFilter.categoryPageSize;
+            query["sortType"] = searchFilter.sortType.ToString();
+            query["userId"] = searchFilter.userId.ToString();
 
             string queryString = query.ToString();
 
-            HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "category/getallcategories?" + queryString);
+            string Token = HttpContext.Session.GetString("jwtToken");
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
+
+            response = await client.GetAsync(client.BaseAddress + "category/getallcategories?" + queryString);
 
             if (response.IsSuccessStatusCode)
             {
@@ -48,7 +70,6 @@ namespace PMS_MVC.Controllers
             var totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = int.Parse(searchFilter.categoryPageNumber);
-            //PagedList<Category> categories = new PagedList<Category>(categoriesList, categoriesList.Count(), int.Parse(categoryPageNumber), int.Parse(categoryPageSize));
 
 
             return PartialView("listshared", categoriesList);
@@ -68,7 +89,15 @@ namespace PMS_MVC.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
+                    string Token = HttpContext.Session.GetString("jwtToken");
+
+                    HttpResponseMessage response = null;
+                    if (!string.IsNullOrEmpty(Token))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                    }
+
+                    response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
                     Category addCategory = new Category();
                     if (response.IsSuccessStatusCode)
                     {
@@ -86,7 +115,14 @@ namespace PMS_MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail(int Id)
         {
-            HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
+            string Token = HttpContext.Session.GetString("jwtToken");
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
+            response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
             Category addCategory = new Category();
             if (response.IsSuccessStatusCode)
             {
@@ -101,25 +137,33 @@ namespace PMS_MVC.Controllers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
+                string Token = HttpContext.Session.GetString("jwtToken");
+                category.UserId = HttpContext.Session.GetInt32("userId");
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
                 content.Add(new StringContent(category.Name), nameof(category.Name));
                 content.Add(new StringContent(category.Code), nameof(category.Code));
                 content.Add(new StringContent(category.Description), nameof(category.Description));
+                content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
 
-                HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "category/create", content);
+                response = await client.PostAsync(client.BaseAddress + "category/create", content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["success"] = "Category has been saved successfully";
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category");
                     return RedirectToAction("list");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData["error"] = "Category name or code is already exist!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.categoryWarningToaster;
                     return View("add", category);
                 }
                 else
                 {
-                    TempData["error"] = "An unexpected error occurred. Please contact your support team.";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                     return View("add", category);
                 }
             }
@@ -130,26 +174,35 @@ namespace PMS_MVC.Controllers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
+                string Token = HttpContext.Session.GetString("jwtToken");
+                category.UserId = HttpContext.Session.GetInt32("userId");
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+
                 content.Add(new StringContent(category.Id.ToString()), nameof(category.Id));
                 content.Add(new StringContent(category.Name), nameof(category.Name));
                 content.Add(new StringContent(category.Code), nameof(category.Code));
                 content.Add(new StringContent(category.Description), nameof(category.Description));
+                content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
 
-                HttpResponseMessage response = await client.PutAsync(client.BaseAddress + "category/edit/" + id, content);
+                response = await client.PutAsync(client.BaseAddress + "category/edit/" + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["success"] = "Category has been saved successfully";
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
                     return RedirectToAction("list");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData["error"] = "Category name or code is already exist!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.categoryWarningToaster;
                     return View("add", category);
                 }
                 else
                 {
-                    TempData["error"] = "An unexpected error occurred. Please contact your support team.";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                     return View("add", category);
                 }
             }
@@ -157,26 +210,31 @@ namespace PMS_MVC.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            // Serialize the id
+            string Token = HttpContext.Session.GetString("jwtToken");
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
             string data = JsonConvert.SerializeObject(id);
-            // Create StringContent
+            
             StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
-            // Make the API call
-            HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "category/delete/" + id, content);
+            response = await client.PostAsync(client.BaseAddress + "category/delete/" + id, content);
             if (response.IsSuccessStatusCode)
             {
-                TempData["success"] = "Product deleted successfully!";
+                TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category"); ;
                 return RedirectToAction("list");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                TempData["error"] = "First delete category's all product and than apply action!";
+                TempData[NotificationType.error.ToString()] = NotificationMessages.unabledeleteToaster;
                 return RedirectToAction("list");
             }
             else
             {
-                TempData["error"] = "An unexpected error occurred. Please contact your support team.";
+                TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                 return RedirectToAction("list");
             }
         }
@@ -192,7 +250,6 @@ namespace PMS_MVC.Controllers
 
         public JsonResult ChangePageSize(int catPageSize)
         {
-            HttpContext.Session.Clear();
             if (catPageSize != 0)
             {
                 HttpContext.Session.SetString("catPageSize", catPageSize.ToString());

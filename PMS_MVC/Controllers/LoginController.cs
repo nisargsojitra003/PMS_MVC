@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PMS_MVC.Models;
-using System.Text;
+using System.Security.Claims;
 
 namespace PMS_MVC.Controllers
 {
@@ -9,10 +11,12 @@ namespace PMS_MVC.Controllers
     {
         Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
-        public LoginController() 
+        private readonly NotificationMessages NotificationMessages;
+        public LoginController(NotificationMessages notificationMessages) 
         {
             client = new HttpClient();
             client.BaseAddress = baseAddress;
+            NotificationMessages = notificationMessages;
         }
 
         public IActionResult Login()
@@ -29,6 +33,8 @@ namespace PMS_MVC.Controllers
                 string actionName = "";
                 string controllerName = "";
                 string jwtToken = "";
+                string role = "";
+                int userId = 0;
                 content.Add(new StringContent(userInfo.Email), nameof(userInfo.Email));
                 content.Add(new StringContent(userInfo.Password), nameof(userInfo.Password));
 
@@ -41,18 +47,30 @@ namespace PMS_MVC.Controllers
                     actionName = responseObject.action;
                     controllerName = responseObject.controller;
                     jwtToken = responseObject.jwtToken;
+                    role = responseObject.role;
+                    userId = responseObject.userId;
                     Response.Cookies.Append("jwt",jwtToken);
-                    TempData["success"] = "User logged in sucessfully!";
+
+                    HttpContext.Session.SetString("jwtToken", jwtToken);
+                    HttpContext.Session.SetInt32("userId", userId);
+
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.loginSuccessToaster;
                     return RedirectToAction(actionName, controllerName);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData["error"] = "Email or password is incorrect!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.loginErrorToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
-                    TempData["error"] = "First create account and than login.";
+                    TempData[NotificationType.warning.ToString()] = NotificationMessages.loginWarningToaster;
                     return RedirectToAction("Login", "Login");
                 }
             }
@@ -77,17 +95,17 @@ namespace PMS_MVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["success"] = "Account created successfully!";
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.accountCreatedSuccessToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData["error"] = "Email is already exist!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.accountCreatedErrorToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
-                    TempData["error"] = "Something went wrong!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                     return View(userInfo);
                 }
             }

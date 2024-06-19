@@ -6,24 +6,36 @@ using System.Web;
 
 namespace PMS_MVC.Controllers
 {
+
     public class ProductController : Controller
     {
         Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
-        public ProductController()
+        private readonly NotificationMessages NotificationMessages;
+        public ProductController(NotificationMessages notificationMessages)
         {
             client = new HttpClient();
             client.BaseAddress = baseAddress;
+            NotificationMessages = notificationMessages;
         }
         public IActionResult list()
         {
-            return View();
+            string Token = HttpContext.Session.GetString("jwtToken");
+            if (!string.IsNullOrEmpty(Token))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("login", "login");
+            }
         }
 
         public async Task<ActionResult<AddProduct>> ProductShared(SearchFilter searchFilter)
         {
             searchFilter.productPageNumber = HttpContext.Session.GetString("pageNumber") ?? "1";
             searchFilter.productPageSize = HttpContext.Session.GetString("pageSize") ?? "5";
+            searchFilter.userId = HttpContext.Session.GetInt32("userId");
             int totalRecords = 0;
 
             List<AddProduct> productList = new List<AddProduct>();
@@ -33,10 +45,19 @@ namespace PMS_MVC.Controllers
             query["searchDescription"] = searchFilter.searchDescription;
             query["productPageNumber"] = searchFilter.productPageNumber;
             query["productPageSize"] = searchFilter.productPageSize;
+            query["userId"] = searchFilter.userId.ToString();
 
             string queryString = query.ToString();
 
-            HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
+            string Token = HttpContext.Session.GetString("jwtToken");
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
+
+            response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
 
             if (response.IsSuccessStatusCode)
             {
@@ -49,7 +70,6 @@ namespace PMS_MVC.Controllers
             var totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.productPageSize));
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = int.Parse(searchFilter.productPageNumber);
-            //PagedList<AddProduct> products = new PagedList<AddProduct>(productList, productList.Count(), int.Parse(productPageNumber), int.Parse(productPageSize));
 
             return PartialView("ProductShared", productList);
         }
@@ -62,7 +82,15 @@ namespace PMS_MVC.Controllers
         public async Task<IActionResult> Add()
         {
             AddProduct addProduct = new AddProduct();
-            HttpResponseMessage response = client.GetAsync(client.BaseAddress + "product/getaddcategorylist").Result;
+            string Token = HttpContext.Session.GetString("jwtToken");
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+            }
+            int? id = HttpContext.Session.GetInt32("userId");
+            response = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -79,14 +107,15 @@ namespace PMS_MVC.Controllers
             {
                 using (var content = new MultipartFormDataContent())
                 {
+                    addProduct.userId = HttpContext.Session.GetInt32("userId"); 
                     // Add form data
                     content.Add(new StringContent(addProduct.ProductName), nameof(addProduct.ProductName));
                     content.Add(new StringContent(addProduct.Description), nameof(addProduct.Description));
                     content.Add(new StringContent(addProduct.Price.ToString()), nameof(addProduct.Price));
                     content.Add(new StringContent(addProduct.CategoryTag), nameof(addProduct.CategoryTag));
                     content.Add(new StringContent(addProduct.CategoryId.ToString()), nameof(addProduct.CategoryId));
+                    content.Add(new StringContent(addProduct.userId.ToString()), nameof(addProduct.userId));
 
-                    // Add the file content
                     if (addProduct.Fileupload != null)
                     {
                         var fileContent = new StreamContent(addProduct.Fileupload.OpenReadStream());
@@ -98,22 +127,30 @@ namespace PMS_MVC.Controllers
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(addProduct.Fileupload.ContentType);
                         content.Add(fileContent);
                     }
-                    // Post the data
-                    HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "product/create", content);
+
+                    string Token = HttpContext.Session.GetString("jwtToken");
+
+                    HttpResponseMessage response = null;
+                    if (!string.IsNullOrEmpty(Token))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                    }
+
+                    response = await client.PostAsync(client.BaseAddress + "product/create", content);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData["success"] = "Product has been saved successfully";
+                        TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product"); ;
                         return RedirectToAction("list");
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        TempData["error"] = "Product name or category is already exist!";
+                        TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
                         return RedirectToAction("list");
                     }
                     else
                     {
-                        TempData["error"] = "An unexpected error occurred. Please try again later.";
+                        TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                         return View("add", addProduct);
                     }
 
@@ -134,7 +171,20 @@ namespace PMS_MVC.Controllers
             try
             {
                 // Get product details
-                HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
+                string Token = HttpContext.Session.GetString("jwtToken");
+                editProduct.userId = HttpContext.Session.GetInt32("userId");
+                int? userId  = HttpContext.Session.GetInt32("userId");
+
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query["id"] = id.ToString();
+                query["userId"] = userId.ToString();
+                string queryString = query.ToString();
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+                response = await client.GetAsync(client.BaseAddress + $"product/getproduct/{id}?userId={userId}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -143,13 +193,11 @@ namespace PMS_MVC.Controllers
 
                     if (editProduct == null)
                     {
-                        // Handle null deserialization
                         return StatusCode(500, "Error deserializing product data.");
                     }
                 }
                 else
                 {
-                    // Handle unsuccessful status code
                     return StatusCode((int)response.StatusCode, "Error retrieving product data.");
                 }
             }
@@ -169,7 +217,14 @@ namespace PMS_MVC.Controllers
             try
             {
                 // Get product details
-                HttpResponseMessage response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
+                string Token = HttpContext.Session.GetString("jwtToken");
+
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+                response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -178,13 +233,11 @@ namespace PMS_MVC.Controllers
 
                     if (editProduct == null)
                     {
-                        // Handle null deserialization
                         return StatusCode(500, "Error deserializing product data.");
                     }
                 }
                 else
                 {
-                    // Handle unsuccessful status code
                     return StatusCode((int)response.StatusCode, "Error retrieving product data.");
                 }
             }
@@ -203,12 +256,14 @@ namespace PMS_MVC.Controllers
             {
                 using (var content = new MultipartFormDataContent())
                 {
+                    editProduct.userId = HttpContext.Session.GetInt32("userId");
                     content.Add(new StringContent(editProduct.ProductId.ToString()), nameof(editProduct.ProductId));
                     content.Add(new StringContent(editProduct.ProductName ?? ""), nameof(editProduct.ProductName));
                     content.Add(new StringContent(editProduct.CategoryId.ToString()), nameof(editProduct.CategoryId));
                     content.Add(new StringContent(TagRadios ?? ""), nameof(editProduct.CategoryTag));
                     content.Add(new StringContent(editProduct.Description ?? ""), nameof(editProduct.Description));
                     content.Add(new StringContent(editProduct.Price.ToString()), nameof(editProduct.Price));
+                    content.Add(new StringContent(editProduct.userId.ToString()), nameof(editProduct.userId));
 
                     if (editProduct.Fileupload != null)
                     {
@@ -217,22 +272,35 @@ namespace PMS_MVC.Controllers
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(editProduct.Fileupload.ContentType);
                         content.Add(fileContent, nameof(editProduct.Fileupload), editProduct.Fileupload.FileName);
                     }
+                    string Token = HttpContext.Session.GetString("jwtToken");
 
-                    HttpResponseMessage response = await client.PutAsync(client.BaseAddress + "product/update/" + id, content);
+                    HttpResponseMessage response = null;
+                    if (!string.IsNullOrEmpty(Token))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                    }
+                    response = await client.PutAsync(client.BaseAddress + "product/update/" + id, content);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData["success"] = "Product has been saved successfully";
+                        TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product");
                         return RedirectToAction("list");
                     }
                     else if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        TempData["error"] = "Product name or code is already exist!";
+                        TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
                         return RedirectToAction("list");
                     }
                     else
                     {
-                        HttpResponseMessage response2 = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
+                        string Token2 = HttpContext.Session.GetString("jwtToken");
+
+                        HttpResponseMessage response2 = null;
+                        if (!string.IsNullOrEmpty(Token2))
+                        {
+                            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token2);
+                        }
+                        response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
 
                         if (response2.IsSuccessStatusCode)
                         {
@@ -254,7 +322,6 @@ namespace PMS_MVC.Controllers
             }
             catch (Exception ex)
             {
-                // Log exception details
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error.");
             }
@@ -266,26 +333,29 @@ namespace PMS_MVC.Controllers
         {
             try
             {
-                // Serialize the id
                 string data = JsonConvert.SerializeObject(id);
-                // Create StringContent
                 StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
-                // Make the API call
-                HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "product/delete/" + id, content);
+                string Token = HttpContext.Session.GetString("jwtToken");
+
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+                response = await client.PostAsync(client.BaseAddress + "product/delete/" + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["success"] = "Product deleted successfully!";
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Product");
                     return RedirectToAction("list");
                 }
                 else
                 {
-                    // Log the status code and response content for debugging
                     string responseContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
 
-                    TempData["error"] = "Error deleting product!";
+                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
                     return View();
                 }
             }
@@ -300,22 +370,25 @@ namespace PMS_MVC.Controllers
         {
             try
             {
-                // Serialize the id
                 string data = JsonConvert.SerializeObject(id);
-                // Create StringContent
                 StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
-                // Make the API call
-                HttpResponseMessage response = await client.PostAsync(client.BaseAddress + "product/deleteimage/" + id, content);
+                string Token = HttpContext.Session.GetString("jwtToken");
+
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+                response = await client.PostAsync(client.BaseAddress + "product/deleteimage/" + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["success"] = "Product's image deleted successfully!";
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Product's Image");
                     return RedirectToAction("list");
                 }
                 else
                 {
-                    // Log the status code and response content for debugging
                     string responseContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
 

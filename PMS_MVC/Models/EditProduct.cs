@@ -7,6 +7,7 @@ namespace PMS_MVC.Models
         public List<Category> categories { get; set; }
         public List<CategoryList> CategoryLists { get; set; }
         public List<EditProduct> editProducts { get; set; }
+        public int? userId { get; set; }
         public int ProductId { get; set; }
 
         [Required(ErrorMessage = "ProductName is required")]
