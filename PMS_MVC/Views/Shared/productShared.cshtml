@@ -100,7 +100,7 @@
             <p class="m-0">
                 Items per page
             </p>
-            <select class="form-select mx-3 p-0" id="pagesizeProduct" onchange="changeProductpagesize()" style="width: auto;">
+            <select class="form-select mx-3 p-0" id="pagesizeProduct" onchange="changeProductPageSize()" style="width: auto;">
                 <option value="5">5</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -108,16 +108,31 @@
             </select>
         </div>
         <ul class="pagination m-0">
-            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            @if (ViewBag.CurrentPage > 1)
             {
-                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                    <button class="page-link" onclick="changePageInProductTable(@i)">@i</button>
+                <li class="page-item">
+                    <button class="page-link" onclick="changePageInProductTable(@(ViewBag.CurrentPage - 1))">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </li>
+            }
+            <li class="page-item active">
+                <button class="page-link">
+                    @ViewBag.CurrentPage
+                </button>
+            </li>
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <button class="page-link" onclick="changePageInProductTable(@(ViewBag.CurrentPage + 1))">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
                 </li>
             }
         </ul>
     </div>
-
 }
+
 else
 {
     <p class="fw-bold align-items-center d-flex justify-content-center">No Records to display</p>

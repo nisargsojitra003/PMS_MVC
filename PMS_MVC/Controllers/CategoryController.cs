@@ -75,7 +75,6 @@ namespace PMS_MVC.Controllers
             return PartialView("listshared", categoriesList);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Save(int Id, bool type)
         {
@@ -151,7 +150,7 @@ namespace PMS_MVC.Controllers
 
                 response = await client.PostAsync(client.BaseAddress + "category/create", content);
 
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) 
                 {
                     TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category");
                     return RedirectToAction("list");

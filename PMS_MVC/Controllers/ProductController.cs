@@ -18,12 +18,28 @@ namespace PMS_MVC.Controllers
             client.BaseAddress = baseAddress;
             NotificationMessages = notificationMessages;
         }
-        public IActionResult list()
+        public async Task<IActionResult> list()
         {
-            string Token = HttpContext.Session.GetString("jwtToken");
+            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
             if (!string.IsNullOrEmpty(Token))
             {
-                return View();
+                AddProduct addProduct = new AddProduct();
+                //string Token = HttpContext.Session.GetString("jwtToken");
+
+                HttpResponseMessage response = null;
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
+                }
+                int? id = HttpContext.Session.GetInt32("userId");
+                response = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
+                }
+                return View(addProduct);
             }
             else
             {
@@ -46,6 +62,8 @@ namespace PMS_MVC.Controllers
             query["productPageNumber"] = searchFilter.productPageNumber;
             query["productPageSize"] = searchFilter.productPageSize;
             query["userId"] = searchFilter.userId.ToString();
+            query["sortTypeProduct"] = searchFilter.sortTypeProduct.ToString();
+            query["searchCategory"] = searchFilter.searchCategory.ToString();
 
             string queryString = query.ToString();
 

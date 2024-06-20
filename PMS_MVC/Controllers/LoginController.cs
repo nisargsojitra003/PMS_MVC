@@ -50,7 +50,7 @@ namespace PMS_MVC.Controllers
                     role = responseObject.role;
                     userId = responseObject.userId;
                     Response.Cookies.Append("jwt",jwtToken);
-
+                    HttpContext.Session.SetString("email",userInfo.Email);
                     HttpContext.Session.SetString("jwtToken", jwtToken);
                     HttpContext.Session.SetInt32("userId", userId);
 

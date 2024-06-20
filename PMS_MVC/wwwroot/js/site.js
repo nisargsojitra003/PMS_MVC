@@ -173,19 +173,19 @@ function changePageInProductTable(productPageNumber) {
 
 //////////Category Script////////////
 function changePageSize() {
-    console.log("hi")
     var catPageSize = $("#pagesizeCategory").val();
+    console.log(catPageSize);
     $.ajax({
         url: "/Category/ChangePageSize",
         data: { catPageSize: catPageSize },
         success: function (response) {
             if (response.success) {
-                $("#categoryListdata").load("listshared");
-                //window.location.reload();
+                $("#categoryListdata").load("/Category/listshared"); // Ensure this URL is correct
             }
         }
     });
 }
+
 
 
 function changePageInTable(pageNumberCategory) {
@@ -288,6 +288,41 @@ function CategoryFilter(sortType) {
         success: function (result) {
             //console.log(result);
             $("#categoryListdata").html(result);
+        }
+    });
+}
+
+function ProductFilter(sortTypeProduct) {
+    var searchDescription = $("#searchDescription").val();
+    var searchProduct = $("#searchProduct").val();
+    var searchCategoryTag = $("#searchCategoryTag").val();
+    var searchCategory = $("#searchCategory").val();
+    $.ajax({
+        url: 'productShared',
+        type: 'POST',
+        data: { sortTypeProduct: sortTypeProduct, searchDescription: searchDescription, searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchCategory: searchCategory },
+        success: function (result) {
+            //console.log(result);
+            $("#productListdata").html(result);
+        }
+    });
+}
+
+function searchProductCategory() {
+    var searchProduct = $("#searchProduct").val();
+    var searchCategoryTag = $("#searchCategoryTag").val();
+    var searchDescription = $("#searchDescription").val();
+    var searchCategory = $("#searchCategory").val();
+    //console.log(searchProduct);
+
+    let url = '/Product/productShared';
+    $.ajax({
+        url: url,
+        data: { searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchDescription: searchDescription, searchCategory: searchCategory },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#productListdata").html(result);
         }
     });
 }
