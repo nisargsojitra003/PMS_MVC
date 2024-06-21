@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PMS_MVC.Models;
 using System.Diagnostics;
 
@@ -46,21 +45,24 @@ namespace PMS_MVC.Controllers
             {
                 return RedirectToAction("login", "login");
             }
-               
+
         }
 
-        public  ActionResult LogOut()
+        public ActionResult LogOut()
         {
-            //HttpResponseMessage response = null;
-            //string Token = HttpContext.Session.GetString("jwtToken");
-            //if (!string.IsNullOrEmpty(Token))
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
-            //}
-            //response = await client.PostAsync() 
             HttpContext.Session.Clear();
-            Response.Cookies.Delete("jwt");
-            return RedirectToAction("login","login");
+            //Response.Cookies.Delete("jwt");
+            return RedirectToAction("login", "login");
+        }
+
+        public IActionResult NotFound()
+        {
+            string originalPath = "unknown";
+            if (HttpContext.Items.ContainsKey("originalPath"))
+            {
+                originalPath = HttpContext.Items["originalPath"] as string;
+            }
+            return View();
         }
 
         public IActionResult Privacy()

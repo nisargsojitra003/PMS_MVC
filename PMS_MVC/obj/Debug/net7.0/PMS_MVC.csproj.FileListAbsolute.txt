@@ -31,3 +31,7 @@ C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\obj\Debug\net7.0\refint\PMS_MVC.dll
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\obj\Debug\net7.0\PMS_MVC.pdb
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\obj\Debug\net7.0\PMS_MVC.genruntimeconfig.cache
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\obj\Debug\net7.0\ref\PMS_MVC.dll
+C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\bin\Debug\net7.0\PMS_MVC_BAL.dll
+C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\bin\Debug\net7.0\PMS_MVC_DAL.dll
+C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\bin\Debug\net7.0\PMS_MVC_BAL.pdb
+C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\bin\Debug\net7.0\PMS_MVC_DAL.pdb

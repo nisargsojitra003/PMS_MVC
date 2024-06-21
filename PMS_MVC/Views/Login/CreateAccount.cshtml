@@ -6,10 +6,7 @@
 <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 <partial name="_Notification" />
 <div class="container d-flex justify-content-center align-items-center">
-
     <div class="shadow-lg rounded bg-white p-4 w-100" style="max-width: 600px;">
-
-
         <div class="formTitle mt-3" id="formTile"><h5>Create Account</h5></div>
         <form asp-action="CreateAccount" asp-controller="Login" method="post" class="dark-mode2" id="addCategoryForm">
             <div class="row mb-3">
@@ -68,6 +65,16 @@
                         <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
                     </div>
 
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <p>If you have already account?</p>
+                    <span>
+                        <a class="" asp-area="" asp-controller="login" asp-action="Login" style="color: #07cff7;">
+                            Login
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="row">

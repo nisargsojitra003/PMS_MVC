@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PMS_MVC.Models
 {
@@ -42,6 +41,13 @@ namespace PMS_MVC.Models
     {
         public int totalCategories { get; set; }
         public int totalProducts { get; set; }
+    }
+
+    public class CategoryResponse
+    {
+        public List<Category> CategoriesList { get; set; }
+        public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
     }
 
 }

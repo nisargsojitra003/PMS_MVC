@@ -12,7 +12,7 @@ namespace PMS_MVC.Controllers
         Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
         private readonly NotificationMessages NotificationMessages;
-        public LoginController(NotificationMessages notificationMessages) 
+        public LoginController(NotificationMessages notificationMessages)
         {
             client = new HttpClient();
             client.BaseAddress = baseAddress;
@@ -27,7 +27,7 @@ namespace PMS_MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Login([FromForm] Login userInfo)
         {
-            
+
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
                 string actionName = "";
@@ -49,15 +49,15 @@ namespace PMS_MVC.Controllers
                     jwtToken = responseObject.jwtToken;
                     role = responseObject.role;
                     userId = responseObject.userId;
-                    Response.Cookies.Append("jwt",jwtToken);
-                    HttpContext.Session.SetString("email",userInfo.Email);
+                    //Response.Cookies.Append("jwt", jwtToken);
+                    HttpContext.Session.SetString("email", userInfo.Email);
                     HttpContext.Session.SetString("jwtToken", jwtToken);
                     HttpContext.Session.SetInt32("userId", userId);
-
-                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    HttpContext.Session.SetString("role", role);
+                    ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                     identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, role));
-                    var principal = new ClaimsPrincipal(identity);
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                     TempData[NotificationType.success.ToString()] = NotificationMessages.loginSuccessToaster;

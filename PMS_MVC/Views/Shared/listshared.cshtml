@@ -2,7 +2,7 @@
 @model List<PMS_MVC.Models.Category>
 @inject IHttpContextAccessor Accessor
 @{
-    var userRole = @Accessor.HttpContext.Session.GetInt32("userId");
+    string userRole = @Accessor.HttpContext.Session.GetString("role");
 }
 <div class="container mt-4">
     <div class="table-responsive shadow-sm p-3 mb-5 bg-body rounded">
@@ -59,7 +59,7 @@
                         <td>@(category.ModifiedAt?.ToString("dd-MM-yyyy hh:mm tt") ?? "")</td>
                         <td>@category.Description</td>
                         <td>
-                            @if (!category.IsSystem || userRole == 2)
+                            @if (!category.IsSystem || userRole == "Admin")
                             {
                                 <div class="btn-group ms-1 d-flex" role="group">
                                     <div class="ms-1">
