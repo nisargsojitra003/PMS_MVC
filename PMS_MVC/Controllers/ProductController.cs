@@ -121,7 +121,7 @@ namespace PMS_MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddProductTodb([FromForm] AddProduct addProduct)
+        public async Task<ActionResult> Add([FromForm] AddProduct addProduct)
         {
             try
             {
@@ -165,8 +165,23 @@ namespace PMS_MVC.Controllers
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
+                        string Token1 = HttpContext.Session.GetString("jwtToken") ?? "";
+
+                        HttpResponseMessage response1 = null;
+                        if (!string.IsNullOrEmpty(Token1))
+                        {
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token1);
+                        }
+                        int? id = HttpContext.Session.GetInt32("userId");
+                        response1 = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
+
+                        if (response1.IsSuccessStatusCode)
+                        {
+                            string data = await response1.Content.ReadAsStringAsync();
+                            addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
+                        }
                         TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
-                        return RedirectToAction("list");
+                        return View("add",addProduct);
                     }
                     else
                     {
@@ -292,13 +307,15 @@ namespace PMS_MVC.Controllers
                         fileContent.Headers.ContentType = new MediaTypeHeaderValue(editProduct.Fileupload.ContentType);
                         content.Add(fileContent, nameof(editProduct.Fileupload), editProduct.Fileupload.FileName);
                     }
-                    string Token = HttpContext.Session.GetString("jwtToken") ?? "";
 
+                    string Token = HttpContext.Session.GetString("jwtToken") ?? "";
                     HttpResponseMessage response = null;
+
                     if (!string.IsNullOrEmpty(Token))
                     {
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                     }
+
                     response = await client.PutAsync(client.BaseAddress + "product/update/" + id, content);
 
                     if (response.IsSuccessStatusCode)
@@ -309,34 +326,30 @@ namespace PMS_MVC.Controllers
                     else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
                         TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
-                        return RedirectToAction("list");
-                    }
-                    else
-                    {
-                        string Token2 = HttpContext.Session.GetString("jwtToken") ?? "";
 
-                        HttpResponseMessage response2 = null;
-                        if (!string.IsNullOrEmpty(Token2))
-                        {
-                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token2);
-                        }
-                        response = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
+                        // Retrieve product details again to show in the edit form
+                        HttpResponseMessage getProductResponse = await client.GetAsync(client.BaseAddress + "product/getproduct/" + id);
 
-                        if (response2.IsSuccessStatusCode)
+                        if (getProductResponse.IsSuccessStatusCode)
                         {
-                            string data = await response2.Content.ReadAsStringAsync();
+                            string data = await getProductResponse.Content.ReadAsStringAsync();
                             editProduct = JsonConvert.DeserializeObject<EditProduct>(data);
 
                             if (editProduct == null)
                             {
                                 return StatusCode(500, "Error deserializing product data.");
                             }
+
+                            return View(editProduct);
                         }
                         else
                         {
-                            return StatusCode((int)response2.StatusCode, "Error retrieving product data.");
+                            return StatusCode((int)getProductResponse.StatusCode, "Error retrieving product data.");
                         }
-                        return View(editProduct);
+                    }
+                    else
+                    {
+                        return StatusCode((int)response.StatusCode, "Failed to update product.");
                     }
                 }
             }

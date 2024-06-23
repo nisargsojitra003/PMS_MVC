@@ -10,3 +10,15 @@ C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.dl
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\refint\PMS_MVC_DAL.dll
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.pdb
 C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\ref\PMS_MVC_DAL.dll
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\bin\Debug\net7.0\PMS_MVC_DAL.deps.json
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\bin\Debug\net7.0\PMS_MVC_DAL.dll
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\bin\Debug\net7.0\PMS_MVC_DAL.pdb
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.csproj.AssemblyReference.cache
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.AssemblyInfoInputs.cache
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.AssemblyInfo.cs
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.csproj.CoreCompileInputs.cache
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.dll
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\refint\PMS_MVC_DAL.dll
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\PMS_MVC_DAL.pdb
+C:\Users\hp\Source\Repos\PMS_MVC\PMS_MVC_DAL\obj\Debug\net7.0\ref\PMS_MVC_DAL.dll
