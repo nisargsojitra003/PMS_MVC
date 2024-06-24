@@ -20,6 +20,12 @@ namespace PMS_MVC.Controllers
             client.BaseAddress = baseAddress;
             NotificationMessages = notificationMessages;
         }
+
+        #region GetAllCategories
+        /// <summary>
+        /// Category list method
+        /// </summary>
+        /// <returns>all category apply all filter and pagination</returns>
         public IActionResult list()
         {
             string Token = HttpContext.Session.GetString("jwtToken") ?? "";
@@ -34,6 +40,11 @@ namespace PMS_MVC.Controllers
 
         }
 
+        /// <summary>
+        /// main category list's partial view.
+        /// </summary>
+        /// <param name="searchFilter"></param>
+        /// <returns></returns>
         public async Task<ActionResult<Category>> listshared(SearchFilter searchFilter)
         {
             searchFilter.categoryPageNumber = HttpContext.Session.GetString("catPageNumber") ?? "1";
@@ -70,14 +81,22 @@ namespace PMS_MVC.Controllers
                 categoriesList = responseObject.categoriesList.ToObject<List<Category>>();
                 totalRecords = responseObject.totalRecords;
             }
-            var totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
+            int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = int.Parse(searchFilter.categoryPageNumber);
 
 
             return PartialView("listshared", categoriesList);
         }
+        #endregion
 
+        #region CreateOrEditCategory
+        /// <summary>
+        /// Create or Edit method of category.
+        /// </summary>
+        /// <param name="Id">category id</param>
+        /// <param name="type">it's either create or edit</param>
+        /// <returns>return view</returns>
         [HttpGet]
         public async Task<IActionResult> Save(int Id, bool type)
         {
@@ -118,26 +137,12 @@ namespace PMS_MVC.Controllers
                 return NotFound();
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> Detail(int Id)
-        {
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
-            if (!string.IsNullOrEmpty(Token))
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-            }
-            response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
-            Category addCategory = new Category();
-            if (response.IsSuccessStatusCode)
-            {
-                string data = await response.Content.ReadAsStringAsync();
-                addCategory = JsonConvert.DeserializeObject<Category>(data);
-            }
-            return View(addCategory);
-        }
-
+        /// <summary>
+        /// Post method for save category
+        /// </summary>
+        /// <param name="category">custom model of category</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Save(Category category)
         {
@@ -175,6 +180,12 @@ namespace PMS_MVC.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit post method
+        /// </summary>
+        /// <param name="category">custom model of category</param>
+        /// <param name="id">category id</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Edit(Category category, int id)
         {
@@ -213,7 +224,41 @@ namespace PMS_MVC.Controllers
                 }
             }
         }
+        #endregion
 
+        #region CategoryDetail
+        /// <summary>
+        /// Detail page of category
+        /// </summary>
+        /// <param name="Id">Category id</param>
+        /// <returns>return category details</returns>
+        [HttpGet]
+        public async Task<IActionResult> Detail(int Id)
+        {
+            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            }
+            response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
+            Category addCategory = new Category();
+            if (response.IsSuccessStatusCode)
+            {
+                string data = await response.Content.ReadAsStringAsync();
+                addCategory = JsonConvert.DeserializeObject<Category>(data);
+            }
+            return View(addCategory);
+        }
+        #endregion
+
+        #region DeleteProduct
+        /// <summary>
+        /// Soft delete category by id
+        /// </summary>
+        /// <param name="id">category id</param>
+        /// <returns></returns>
         public async Task<ActionResult> Delete(int id)
         {
             string Token = HttpContext.Session.GetString("jwtToken") ?? "";
@@ -245,7 +290,9 @@ namespace PMS_MVC.Controllers
                 return RedirectToAction("list");
             }
         }
+        #endregion
 
+        #region SessionVariable
         public JsonResult ChangePage(int pageNumberCategory)
         {
             if (pageNumberCategory != 0)
@@ -264,7 +311,6 @@ namespace PMS_MVC.Controllers
             }
             return Json(new { success = true });
         }
-
-
+        #endregion
     }
 }

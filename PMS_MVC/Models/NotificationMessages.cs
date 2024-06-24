@@ -21,7 +21,7 @@
         //Login user common notification string
         public string loginSuccessToaster = "User logged in successfully!";
         public string loginErrorToaster = "Email or password is incorrect!";
-        public string loginWarningToaster = "first create account and after you can login!";
+        public string loginWarningToaster = "First create account and after you can login!";
     }
 
     public enum NotificationType

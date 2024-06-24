@@ -21,7 +21,7 @@
 <body>
     <header>
         @{
-            var userEmail = @Accessor.HttpContext.Session.GetString("email");
+            string userEmail = @Accessor.HttpContext.Session.GetString("email") ?? "";
         }
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -35,10 +35,15 @@
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Product" asp-action="UserActivity">Activity</a>
+                        </li>
+                    </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item d-flex align-items-center">
                             <p class="text-dark mb-0 me-3">Welcome : <strong>@userEmail</strong></p>
-                            <a class="btn btn-outline-danger" asp-controller="Home" asp-action="LogOut">Log Out</a>
+                            <a class="btn btn-outline-danger" asp-controller="Home" asp-action="LogOut">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -57,7 +62,6 @@
     &copy; 2024 - PMS_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
     </footer> *@
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

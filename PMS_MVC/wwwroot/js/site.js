@@ -21,29 +21,22 @@ function handleDeleteCategoryClick() {
 function validateForm() {
     var fileInput = document.getElementById("myFile");
     var file = fileInput.files[0];
-
-    // Check if a file is selected
     if (!file) {
         alert("Please select a file.");
         return false;
     }
 
-    // Check file type
     var allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
         alert("Only JPEG, PNG, and JPG files are allowed.");
         return false;
     }
 
-    // Check file size (example: maximum file size of 5MB)
-    var maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    var maxSize = 5 * 1024 * 1024; 
     if (file.size > maxSize) {
         alert("File size exceeds the maximum limit of 5MB.");
         return false;
     }
-
-    // Additional validation logic can be added here
-
     return true; // Form submission allowed if all validations pass
 }
 
@@ -201,22 +194,6 @@ function changePageInTable(pageNumberCategory) {
         }
     });
 }
-
-
-//function changeProductpagesize() {
-//    console.log("hi")
-//    var pageSize = $("#pagesize").val();
-//    $.ajax({
-//        url: "/Product/ChangePageSize",
-//        data: { pageSize: pageSize },
-//        success: function (response) {
-//            if (response.success) {
-//                $("#productListdata").load("productShared");
-//                //window.location.reload();
-//            }
-//        }
-//    });
-//}
 
 function searchCategory() {
 

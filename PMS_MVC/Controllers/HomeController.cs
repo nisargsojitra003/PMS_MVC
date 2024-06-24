@@ -19,6 +19,11 @@ namespace PMS_MVC.Controllers
             NotificationMessages = notificationMessages;
         }
 
+        #region HomePage
+        /// <summary>
+        /// main page view(total count of category and product)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -47,14 +52,26 @@ namespace PMS_MVC.Controllers
             }
 
         }
+        #endregion
 
+        #region Logout
+        /// <summary>
+        /// Logout method.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult LogOut()
         {
             HttpContext.Session.Clear();
             //Response.Cookies.Delete("jwt");
             return RedirectToAction("login", "login");
         }
+        #endregion
 
+        #region NotFound
+        /// <summary>
+        /// when unappropriate url than show this page.
+        /// </summary>
+        /// <returns></returns>
         public IActionResult NotFound()
         {
             string originalPath = "unknown";
@@ -64,6 +81,7 @@ namespace PMS_MVC.Controllers
             }
             return View();
         }
+        #endregion
 
         public IActionResult Privacy()
         {

@@ -19,11 +19,17 @@ namespace PMS_MVC.Controllers
             NotificationMessages = notificationMessages;
         }
 
+        #region LoginMethod
         public IActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Login post method, check user is valid or not?
+        /// </summary>
+        /// <param name="userInfo">custom model of login information</param>
+        /// <returns>If authenticate user are there than return to home page</returns>
         [HttpPost]
         public async Task<ActionResult> Login([FromForm] Login userInfo)
         {
@@ -43,7 +49,7 @@ namespace PMS_MVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    var responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
+                    dynamic responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
                     actionName = responseObject.action;
                     controllerName = responseObject.controller;
                     jwtToken = responseObject.jwtToken;
@@ -75,12 +81,23 @@ namespace PMS_MVC.Controllers
                 }
             }
         }
+        #endregion
 
+        #region CreateAccount
+        /// <summary>
+        /// Create account view
+        /// </summary>
+        /// <returns></returns>
         public IActionResult CreateAccount()
         {
             return View();
         }
 
+        /// <summary>
+        /// Check account is not exist if exist than redirect to login page.
+        /// </summary>
+        /// <param name="userInfo">user's information</param>
+        /// <returns>by successfully register return to login method</returns>
         [HttpPost]
         public async Task<ActionResult> CreateAccount([FromForm] Login userInfo)
         {
@@ -110,5 +127,6 @@ namespace PMS_MVC.Controllers
                 }
             }
         }
+        #endregion
     }
 }
