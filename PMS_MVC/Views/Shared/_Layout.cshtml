@@ -23,7 +23,7 @@
         @{
             string userEmail = @Accessor.HttpContext.Session.GetString("email") ?? "";
         }
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 topnav">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PMS</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,23 +32,22 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index" aria-current="page">Home</a>
                         </li>
-                    </ul>
-                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Product" asp-action="UserActivity">Activity</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="UserActivity">My Activity</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item d-flex align-items-center">
                             <p class="text-dark mb-0 me-3">Welcome : <strong>@userEmail</strong></p>
-                            <a class="btn btn-outline-danger" asp-controller="Home" asp-action="LogOut">Logout</a>
+                            <button type="button" onclick="location.href='@Url.Action("LogOut", "Home")'" class="btn btn-outline-danger">Logout</button>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">

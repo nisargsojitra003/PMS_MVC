@@ -40,6 +40,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Home/UserActivity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVc2VyQWN0aXZpdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Login/CreateAccount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cQ3JlYXRlQWNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -64,10 +68,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxsaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Product/UserActivity.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxVc2VyQWN0aXZpdHkuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -78,6 +78,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/productShared.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXHByb2R1Y3RTaGFyZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/userActivityShared.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXHVzZXJBY3Rpdml0eVNoYXJlZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/_Notification.cshtml]

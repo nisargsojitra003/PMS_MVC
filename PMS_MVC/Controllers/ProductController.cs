@@ -67,6 +67,7 @@ namespace PMS_MVC.Controllers
             searchFilter.productPageSize = HttpContext.Session.GetString("pageSize") ?? "5";
             searchFilter.userId = HttpContext.Session.GetInt32("userId");
             int totalRecords = 0;
+            ViewBag.Currentpagesize = searchFilter.productPageSize;
 
             List<AddProduct> productList = new List<AddProduct>();
             NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);
@@ -108,25 +109,7 @@ namespace PMS_MVC.Controllers
         #endregion
 
 
-        public async Task<ActionResult<UserActivity>> UserActivity()
-        {
-            List<UserActivity> activityList = new List<UserActivity>();
-            int? Id = HttpContext.Session.GetInt32("userId");
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
-
-            HttpResponseMessage response = null;
-            if (!string.IsNullOrEmpty(Token))
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-            }
-            response = await client.GetAsync(client.BaseAddress + "product/getallactivity?id=" + Id);
-            if (response.IsSuccessStatusCode)
-            {
-                string data = response.Content.ReadAsStringAsync().Result;
-                activityList = JsonConvert.DeserializeObject<List<UserActivity>>(data);
-            }
-            return View(activityList);
-        }
+        
 
         #region AddProduct
         /// <summary>

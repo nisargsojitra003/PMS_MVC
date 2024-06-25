@@ -42,6 +42,33 @@ app.Use(async (ctx, next) =>
         await next();
     }
 });
+//following condition use for clear cache and when we clicked in back than not open content.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/Home"))
+    {
+        context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.Headers.Add("Pragma", "no-cache");
+        context.Response.Headers.Add("Expires", "0");
+    }
+
+    if (context.Request.Path.StartsWithSegments("/Product"))
+    {
+        context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.Headers.Add("Pragma", "no-cache");
+        context.Response.Headers.Add("Expires", "0");
+    }
+
+    if (context.Request.Path.StartsWithSegments("/Category"))
+    {
+        context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.Headers.Add("Pragma", "no-cache");
+        context.Response.Headers.Add("Expires", "0");
+    }
+
+    await next.Invoke();
+});
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

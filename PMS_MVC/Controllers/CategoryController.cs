@@ -37,7 +37,6 @@ namespace PMS_MVC.Controllers
             {
                 return RedirectToAction("login", "login");
             }
-
         }
 
         /// <summary>
@@ -51,6 +50,7 @@ namespace PMS_MVC.Controllers
             searchFilter.categoryPageSize = HttpContext.Session.GetString("catPageSize") ?? "5";
             searchFilter.userId = HttpContext.Session.GetInt32("userId");
             int totalRecords = 0;
+            ViewBag.Currentpagesize = searchFilter.categoryPageSize;
 
             List<Category> categoriesList = new List<Category>();
             NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);

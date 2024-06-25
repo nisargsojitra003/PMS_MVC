@@ -150,7 +150,7 @@ function changeProductpagesize() {
 
 
 function changePageInProductTable(productPageNumber) {
-    console.log(productPageNumber);
+    //console.log(productPageNumber);
     $.ajax({
         url: "/Product/ChangePage",
         data: { productPageNumber: productPageNumber },
@@ -167,7 +167,7 @@ function changePageInProductTable(productPageNumber) {
 //////////Category Script////////////
 function changePageSize() {
     var catPageSize = $("#pagesizeCategory").val();
-    console.log(catPageSize);
+    //console.log(catPageSize);
     $.ajax({
         url: "/Category/ChangePageSize",
         data: { catPageSize: catPageSize },
@@ -182,7 +182,7 @@ function changePageSize() {
 
 
 function changePageInTable(pageNumberCategory) {
-    console.log(pageNumberCategory);
+    //console.log(pageNumberCategory);
     $.ajax({
         url: "/Category/ChangePage",
         data: { pageNumberCategory: pageNumberCategory },
@@ -194,6 +194,71 @@ function changePageInTable(pageNumberCategory) {
         }
     });
 }
+
+
+/////////////////////////Activity Page////////////////////////////
+function changePageSizeActivity() {
+    var activityPageSize = $("#pagesizeActivity").val();
+    //console.log(activityPageSize);
+    $.ajax({
+        url: "/Home/ChangeActivityPageSize",
+        data: { activityPageSize: activityPageSize },
+        success: function (response) {
+            if (response.success) {
+                $("#activityListdata").load("/Home/userActivityShared"); // Ensure this URL is correct
+            }
+        }
+    });
+}
+
+function changePageInActivityTable(activityPageNumber) {
+    //console.log(activityPageNumber);
+    $.ajax({
+        url: "/Home/ChangeActivityPage",
+        data: { activityPageNumber: activityPageNumber },
+        success: function (response) {
+            if (response.success) {
+                $("#activityListdata").load("/Home/userActivityShared");
+                //window.location.reload();
+            }
+        }
+    });
+}
+
+function searchActivity() {
+
+    var searchActivity = $("#searchActivityTab").val();
+   
+    //console.log(searchActivity);
+
+    let url = '/Home/userActivityShared';
+    $.ajax({
+        url: url,
+        data: { searchActivity: searchActivity },
+        type: 'GET',
+        success: function (result) {
+            //console.log(result);
+            $("#activityListdata").html(result);
+        }
+    });
+}
+
+
+function ActivityFilter(sortTypeActivity) {
+    var searchActivity = $("#searchActivityTab").val();
+    //console.log(sortTypeActivity);
+   
+    $.ajax({
+        url: '/Home/userActivityShared',
+        type: 'POST',
+        data: { searchActivity: searchActivity, sortTypeActivity: sortTypeActivity },
+        success: function (result) {
+            //console.log(result);
+            $("#activityListdata").html(result);
+        }
+    });
+}
+
 
 function searchCategory() {
 

@@ -1,0 +1,33 @@
+﻿<div id="ActivityList" class="container mt-3">
+    <div class="row">
+        <h4 class="text-info">
+            My Activity
+        </h4>
+    </div>
+    <div class="col-md-12 mb-3">
+        <div class="form-floating">
+            <input class="form-control dark-mode2" type="text" placeholder="Activity" aria-label="Search" id="searchActivityTab" onkeyup="searchActivity()" maxlength="25">
+            <label for="searchActivityTab" class="ms-2">Search Activity</label>
+        </div>
+    </div>
+    <div class="col-12 mb-3 d-flex justify-content-between">
+        <button data-toggle="tooltip" data-placement="top" id="activityClear" title="Clear Search" class="btn btn-outline-danger">
+            <i class="bi bi-backspace"></i>
+        </button>
+    </div>
+
+    <div id="activityListdata" class="row">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#activityListdata').load("/Home/userActivityShared");
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).on('click', '#activityClear', function () {
+        $('#searchActivityTab').val('');
+        $('#activityListdata').load("/Home/userActivityShared");
+    });
+</script>
