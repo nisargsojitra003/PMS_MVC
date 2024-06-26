@@ -28,8 +28,8 @@ namespace PMS_MVC.Controllers
         /// <returns>all category apply all filter and pagination</returns>
         public IActionResult list()
         {
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
-            if (!string.IsNullOrEmpty(Token))
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (!string.IsNullOrEmpty(token))
             {
                 return View();
             }
@@ -64,12 +64,12 @@ namespace PMS_MVC.Controllers
 
             string queryString = query.ToString();
 
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
             HttpResponseMessage response = null;
-            if (!string.IsNullOrEmpty(Token))
+            if (!string.IsNullOrEmpty(token))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
             response = await client.GetAsync(client.BaseAddress + "category/getallcategories?" + queryString);
@@ -98,7 +98,7 @@ namespace PMS_MVC.Controllers
         /// <param name="type">it's either create or edit</param>
         /// <returns>return view</returns>
         [HttpGet]
-        public async Task<IActionResult> Save(int Id, bool type)
+        public async Task<IActionResult> Save(int id, bool type)
         {
             try
             {
@@ -110,20 +110,24 @@ namespace PMS_MVC.Controllers
                 }
                 else
                 {
-                    string Token = HttpContext.Session.GetString("jwtToken") ?? "";
-
+                    string token = HttpContext.Session.GetString("jwtToken") ?? "";
+                    int? userId = HttpContext.Session.GetInt32("userId");
                     HttpResponseMessage response = null;
-                    if (!string.IsNullOrEmpty(Token))
+                    if (!string.IsNullOrEmpty(token))
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
+                    response = await client.GetAsync(client.BaseAddress + $"category/getcategory/{id}?userId={userId}");
                     Category addCategory = new Category();
                     if (response.IsSuccessStatusCode)
                     {
                         string data = await response.Content.ReadAsStringAsync();
                         addCategory = JsonConvert.DeserializeObject<Category>(data);
+                    }
+                    else if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        return View("invalid");
                     }
                     else
                     {
@@ -148,12 +152,12 @@ namespace PMS_MVC.Controllers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
-                string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+                string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
                 HttpResponseMessage response = null;
-                if (!string.IsNullOrEmpty(Token))
+                if (!string.IsNullOrEmpty(token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
                 content.Add(new StringContent(category.Name), nameof(category.Name));
                 content.Add(new StringContent(category.Code), nameof(category.Code));
@@ -164,7 +168,7 @@ namespace PMS_MVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category");
+                    TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
                     return RedirectToAction("list");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -191,12 +195,12 @@ namespace PMS_MVC.Controllers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
-                string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+                string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
                 HttpResponseMessage response = null;
-                if (!string.IsNullOrEmpty(Token))
+                if (!string.IsNullOrEmpty(token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
 
                 content.Add(new StringContent(category.Id.ToString()), nameof(category.Id));
@@ -233,21 +237,25 @@ namespace PMS_MVC.Controllers
         /// <param name="Id">Category id</param>
         /// <returns>return category details</returns>
         [HttpGet]
-        public async Task<IActionResult> Detail(int Id)
+        public async Task<IActionResult> Detail(int id)
         {
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
-
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            int? userId = HttpContext.Session.GetInt32("userId");
             HttpResponseMessage response = null;
-            if (!string.IsNullOrEmpty(Token))
+            if (!string.IsNullOrEmpty(token))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            response = await client.GetAsync(client.BaseAddress + "category/getcategory/" + Id);
+            response = await client.GetAsync(client.BaseAddress + $"category/getcategory/{id}?userId={userId}");
             Category addCategory = new Category();
             if (response.IsSuccessStatusCode)
             {
                 string data = await response.Content.ReadAsStringAsync();
                 addCategory = JsonConvert.DeserializeObject<Category>(data);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return View("invalid");
             }
             return View(addCategory);
         }
@@ -261,12 +269,12 @@ namespace PMS_MVC.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Delete(int id)
         {
-            string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
             HttpResponseMessage response = null;
-            if (!string.IsNullOrEmpty(Token))
+            if (!string.IsNullOrEmpty(token))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             string data = JsonConvert.SerializeObject(id);
 

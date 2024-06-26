@@ -6,7 +6,12 @@
 <!-- Search Product Props. -->
 <div class="container ProductList">
     <div class="row">
-        <h4 class="text-info">Product List:</h4>
+        <div class="d-flex justify-content-start mb-3">
+            <a asp-action="index" asp-controller="home" class="btn shadow btn-outline-secondary border-info text-info px-3">
+                < Back
+            </a>
+        </div>
+        <h4 class="text-info">Product List</h4>
         <div class="col-md-4  mb-3">
             <div class="form-floating">
                 <input class="form-control dark-mode2" type="text" placeholder="Search Product" aria-label="Search" id="searchProduct" onkeyup="searchProcudtName()" maxlength="25">
@@ -53,7 +58,7 @@
     </div>
     <div class="row">
         <div class="col-12" id="productListdata">
-            @* <partial name="productshared" /> *@
+            
         </div>
     </div>
 

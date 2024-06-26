@@ -6,7 +6,6 @@ function handleDeleteProductClick() {
     $(document).on('click', '.deleteProduct', function () {
         $("#delProductModal").modal("show");
         $("#ProductIdVal").val($(this).closest('.tr').data('rid'));
-        // Add any additional logic here if needed
     });
 }
 
@@ -14,7 +13,6 @@ function handleDeleteCategoryClick() {
     $(document).on('click', '.deleteCategory', function () {
         $("#delCategoryModal").modal("show");
         $("#CategoryIdVal").val($(this).closest('.tr').data('rid'));
-        // Add any additional logic here if needed
     });
 }
 

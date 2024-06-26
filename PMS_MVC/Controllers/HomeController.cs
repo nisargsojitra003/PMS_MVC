@@ -37,10 +37,9 @@ namespace PMS_MVC.Controllers
 
                 int? id = HttpContext.Session.GetInt32("userId");
                 HttpResponseMessage response = null;
-                if (!string.IsNullOrEmpty(Token))
-                {
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Token);
-                }
+                
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+               
                 response = await client.GetAsync(client.BaseAddress + $"home/index?id={id}");
                 if (response.IsSuccessStatusCode)
                 {
@@ -120,7 +119,6 @@ namespace PMS_MVC.Controllers
         public ActionResult LogOut()
         {
             HttpContext.Session.Clear();
-            //Response.Cookies.Delete("jwt");
             return RedirectToAction("login", "login");
         }
         #endregion

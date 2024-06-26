@@ -16,8 +16,7 @@ namespace PMS_MVC.Models
         public string? Password { get; set; }
 
         [Required(ErrorMessage = "Confirm Password is required")]
-        [Compare("Password", ErrorMessage = "Password and confirm password is not match")]
-        //[RegularExpression("^((?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])|(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^a-zA-Z0-9])|(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])|(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^a-zA-Z0-9])).{8,}$", ErrorMessage = "Passwords must be at least 8 characters and contains one Uppercase, one Lowercase and Special character")]
+        [Compare("Password", ErrorMessage = "Your Password and confirm password is not match")]
         [StringLength(50, ErrorMessage = "Only 50 Characaters are Accepted")]
         public string? ConfirmPassword { get; set; }
     }

@@ -507,11 +507,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC\\PMS_MVC.csproj",
+      "projectUniqueName": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC\\PMS_MVC.csproj",
       "projectName": "PMS_MVC",
-      "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC\\PMS_MVC.csproj",
+      "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC\\PMS_MVC.csproj",
       "packagesPath": "C:\\Users\\pca103\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC\\obj\\",
+      "outputPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pca103\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -528,11 +528,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {
-              "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj"
+            "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {
+              "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj"
             },
-            "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
-              "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj"
+            "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
+              "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj"
             }
           }
         }

@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {}
+    "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {
+    "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj",
+        "projectUniqueName": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj",
         "projectName": "PMS_MVC_BAL",
-        "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj",
+        "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_BAL\\PMS_MVC_BAL.csproj",
         "packagesPath": "C:\\Users\\pca103\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_BAL\\obj\\",
         "projectStyle": "PackageReference",
@@ -28,8 +28,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
-                "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj"
+              "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
+                "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj"
               }
             }
           }
@@ -69,12 +69,12 @@
         }
       }
     },
-    "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
+    "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj",
+        "projectUniqueName": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj",
         "projectName": "PMS_MVC_DAL",
-        "projectPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj",
+        "projectPath": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC_DAL\\PMS_MVC_DAL.csproj",
         "packagesPath": "C:\\Users\\pca103\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\pca103\\Source\\Repos\\PMS_MVC\\PMS_MVC_DAL\\obj\\",
         "projectStyle": "PackageReference",

@@ -9,101 +9,105 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PMS_MVC
 build_property.RootNamespace = PMS_MVC
-build_property.ProjectDir = C:\Users\pca103\Source\Repos\PMS_MVC\PMS_MVC\
+build_property.ProjectDir = C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\pca103\Source\Repos\PMS_MVC\PMS_MVC
+build_property.MSBuildProjectDirectory = C:\Users\pca103\source\repos\PMS_MVC\PMS_MVC
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Category/add.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Category/add.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcYWRkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Category/detail.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Category/detail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcZGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Category/list.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Category/list.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcbGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Home/Index.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Home/NotFound.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Home/NotFound.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOb3RGb3VuZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Home/Privacy.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Home/UserActivity.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Home/UserActivity.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVc2VyQWN0aXZpdHkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Login/CreateAccount.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Login/CreateAccount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cQ3JlYXRlQWNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Login/Login.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Product/add.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Product/add.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxhZGQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Product/detail.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Product/detail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxkZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Product/edit.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Product/edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxlZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Product/list.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Product/list.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxsaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/Error.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/listshared.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/invalid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGludmFsaWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/listshared.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGxpc3RzaGFyZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/productShared.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/productShared.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXHByb2R1Y3RTaGFyZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/userActivityShared.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/userActivityShared.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXHVzZXJBY3Rpdml0eVNoYXJlZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/_Notification.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/_Notification.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Ob3RpZmljYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/_NullLayout.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/_NullLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9OdWxsTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/_ViewImports.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/_ViewStart.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pca103/Source/Repos/PMS_MVC/PMS_MVC/Views/Shared/_Layout.cshtml]
+[C:/Users/pca103/source/repos/PMS_MVC/PMS_MVC/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-ye7arob4cl

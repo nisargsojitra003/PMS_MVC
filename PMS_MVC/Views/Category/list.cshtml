@@ -5,7 +5,12 @@
 <!-- Category List Search Props. -->
 <div id="CategoryList" class="container mt-3">
     <div class="row">
-        <h4 class="text-info">Category List:</h4>
+        <div class="d-flex justify-content-start mb-2">
+            <a asp-action="index" asp-controller="home" class="btn shadow btn-outline-secondary border-info text-info px-3">
+                < Back
+            </a>
+        </div>
+        <h4 class="text-info">Category List</h4>
         <div class="col-md-6 mb-3">
             <div class="form-floating">
                 <input class="form-control dark-mode2" type="text" placeholder="Category Name" aria-label="Search" id="searchCategoryTab" onkeyup="searchCategory()" maxlength="25">

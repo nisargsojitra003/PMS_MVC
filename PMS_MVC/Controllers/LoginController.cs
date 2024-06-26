@@ -20,9 +20,21 @@ namespace PMS_MVC.Controllers
         }
 
         #region LoginMethod
+        /// <summary>
+        /// Login page view method.
+        /// </summary>
+        /// <returns>if user already login than can't go to loginpage</returns>
         public IActionResult Login()
         {
-            return View();
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (!string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         /// <summary>

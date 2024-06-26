@@ -41,15 +41,3 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 </style>
-
-<script>
-    $(document).ready(function () {
-        function DisableBackButton() {
-            window.history.forward()
-        }
-        DisableBackButton();
-        window.onload = DisableBackButton;
-        window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
-        window.onload = function () { void (0) }
-    });
-</script>

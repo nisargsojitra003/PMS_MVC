@@ -14,6 +14,7 @@
         public string categoryWarningToaster = "Category name or code is already Exist!";
         //product controller common notification string
         public string productWarningToaster = "Product name or category is already Exist!";
+        public string productErrorToaster = "Error deleting product!";
         //Login controller common notification string
         //Create account common notification string
         public string accountCreatedSuccessToaster = "Account has been created successfully!";
@@ -21,7 +22,7 @@
         //Login user common notification string
         public string loginSuccessToaster = "User logged in successfully!";
         public string loginErrorToaster = "Email or password is incorrect!";
-        public string loginWarningToaster = "First create account and after you can login!";
+        public string loginWarningToaster = "Account doesn't exist with entered Email. Kindly create an account.";
     }
 
     public enum NotificationType
