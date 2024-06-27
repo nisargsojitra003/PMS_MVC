@@ -11,14 +11,14 @@ namespace PMS_MVC.Controllers
 
     public class ProductController : Controller
     {
-        Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
         private readonly NotificationMessages NotificationMessages;
-        public ProductController(NotificationMessages notificationMessages)
+        private readonly APIUrls APIUrls;
+        public ProductController(IHttpClientFactory httpClientFactory, NotificationMessages notificationMessages, APIUrls aPIUrls)
         {
-            client = new HttpClient();
-            client.BaseAddress = baseAddress;
+            client = httpClientFactory.CreateClient("MyApiClient");
             NotificationMessages = notificationMessages;
+            APIUrls = aPIUrls;
         }
 
         #region GetAllProducts
@@ -39,7 +39,7 @@ namespace PMS_MVC.Controllers
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
                 int? id = HttpContext.Session.GetInt32("userId");
-                response = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
+                response = client.GetAsync(client.BaseAddress + APIUrls.categoryListView + id).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -87,15 +87,15 @@ namespace PMS_MVC.Controllers
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-
-            response = await client.GetAsync(client.BaseAddress + "product/getallproducts?" + queryString);
+            ProductListResponse productListResponse = new ProductListResponse();
+            response = await client.GetAsync(client.BaseAddress + APIUrls.getAllProducts + queryString);
 
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                dynamic responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
-                productList = responseObject.productList.ToObject<List<AddProduct>>();
-                totalRecords = responseObject.totalProducts;
+                productListResponse = JsonConvert.DeserializeObject<ProductListResponse>(apiResponse);
+                productList = productListResponse.ProductList;
+                totalRecords = productListResponse.TotalRecords;
             }
 
             int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.productPageSize));
@@ -125,7 +125,7 @@ namespace PMS_MVC.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             int? id = HttpContext.Session.GetInt32("userId");
-            response = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
+            response = client.GetAsync(client.BaseAddress + APIUrls.createProductCategory + id).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -180,7 +180,7 @@ namespace PMS_MVC.Controllers
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    response = await client.PostAsync(client.BaseAddress + "product/create", content);
+                    response = await client.PostAsync(client.BaseAddress + APIUrls.createProduct, content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -197,7 +197,7 @@ namespace PMS_MVC.Controllers
                             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token1);
                         }
                         int? id = HttpContext.Session.GetInt32("userId");
-                        response1 = client.GetAsync(client.BaseAddress + "product/getaddcategorylist?id=" + id).Result;
+                        response1 = client.GetAsync(client.BaseAddress + APIUrls.createProductCategory + id).Result;
 
                         if (response1.IsSuccessStatusCode)
                         {
@@ -250,7 +250,7 @@ namespace PMS_MVC.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
-                response = await client.GetAsync(client.BaseAddress + $"product/getproduct/{id}?userId={userId}");
+                response = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + id + APIUrls.userId + userId);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -318,7 +318,7 @@ namespace PMS_MVC.Controllers
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    response = await client.PutAsync(client.BaseAddress + "product/update/" + id, content);
+                    response = await client.PutAsync(client.BaseAddress + APIUrls.editProduct + id, content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -330,7 +330,7 @@ namespace PMS_MVC.Controllers
                         TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
                         int? userId = HttpContext.Session.GetInt32("userId");
                         // Retrieve product details again to show in the edit form
-                        HttpResponseMessage getProductResponse = await client.GetAsync(client.BaseAddress + $"product/getproduct/{id}?userId={userId}");
+                        HttpResponseMessage getProductResponse = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + id + APIUrls.userId + userId);
 
                         if (getProductResponse.IsSuccessStatusCode)
                         {
@@ -384,7 +384,7 @@ namespace PMS_MVC.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
-                response = await client.GetAsync(client.BaseAddress + $"product/getproduct/{id}?userId={userId}");
+                response = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + id + APIUrls.userId + userId);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -434,7 +434,7 @@ namespace PMS_MVC.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
-                response = await client.PostAsync(client.BaseAddress + "product/delete/" + id, content);
+                response = await client.PostAsync(client.BaseAddress + APIUrls.deleteProduct + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -479,7 +479,7 @@ namespace PMS_MVC.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
-                response = await client.PostAsync(client.BaseAddress + "product/deleteimage/" + id, content);
+                response = await client.PostAsync(client.BaseAddress + APIUrls.deleteImage + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {

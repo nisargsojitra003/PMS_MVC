@@ -6,7 +6,7 @@
 <div id="CategoryList" class="container mt-3">
     <div class="row">
         <div class="d-flex justify-content-start mb-2">
-            <a asp-action="index" asp-controller="home" class="btn shadow btn-outline-secondary border-info text-info px-3">
+            <a asp-action="index" asp-controller="dashboard" class="btn shadow btn-outline-secondary border-info text-info px-3">
                 < Back
             </a>
         </div>
@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-6 mb-3">
             <div class="form-floating">
-                <input class="form-control dark-mode2" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Category Code" aria-label="Search" id="searchCategoryCodeTab" maxlength="5" onkeyup="searchCode()">
+                <input class="form-control dark-mode2" type="text" pattern="\d*" onKeyPress="if(this.value.length==5) return false;" placeholder="Category Code" aria-label="Search" onkeyup="searchCode()" id="searchCategoryCodeTab" maxlength="5" oninput="validateNumberInput(this)">
                 <label for="searchCategoryCodeTab" class="ms-2">Search Code</label>
             </div>
         </div>
@@ -68,3 +68,8 @@
         margin-right: 5px; /* Adjust spacing as needed */
     }
 </style>
+<script>
+    function validateNumberInput(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+</script>

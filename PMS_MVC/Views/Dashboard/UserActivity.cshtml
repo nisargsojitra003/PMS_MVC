@@ -1,7 +1,7 @@
 ﻿<div id="ActivityList" class="container mt-3">
     <div class="row">
         <div class="d-flex justify-content-start mb-3">
-            <a asp-action="index" asp-controller="home" class="btn shadow btn-outline-secondary border-info text-info px-3">
+            <a asp-action="index" asp-controller="dashboard" class="btn shadow btn-outline-secondary border-info text-info px-3">
                 < Back
             </a>
         </div>
@@ -27,12 +27,12 @@
 
 <script>
     $(document).ready(function () {
-        $('#activityListdata').load("/Home/userActivityShared");
+        $('#activityListdata').load("/dashboard/userActivityShared");
         $('[data-toggle="tooltip"]').tooltip();
     });
 
     $(document).on('click', '#activityClear', function () {
         $('#searchActivityTab').val('');
-        $('#activityListdata').load("/Home/userActivityShared");
+        $('#activityListdata').load("/dashboard/userActivityShared");
     });
 </script>

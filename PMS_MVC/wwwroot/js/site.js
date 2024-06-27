@@ -199,11 +199,11 @@ function changePageSizeActivity() {
     var activityPageSize = $("#pagesizeActivity").val();
     //console.log(activityPageSize);
     $.ajax({
-        url: "/Home/ChangeActivityPageSize",
+        url: "/dashboard/ChangeActivityPageSize",
         data: { activityPageSize: activityPageSize },
         success: function (response) {
             if (response.success) {
-                $("#activityListdata").load("/Home/userActivityShared"); // Ensure this URL is correct
+                $("#activityListdata").load("/dashboard/userActivityShared"); // Ensure this URL is correct
             }
         }
     });
@@ -212,11 +212,11 @@ function changePageSizeActivity() {
 function changePageInActivityTable(activityPageNumber) {
     //console.log(activityPageNumber);
     $.ajax({
-        url: "/Home/ChangeActivityPage",
+        url: "/dashboard/ChangeActivityPage",
         data: { activityPageNumber: activityPageNumber },
         success: function (response) {
             if (response.success) {
-                $("#activityListdata").load("/Home/userActivityShared");
+                $("#activityListdata").load("/dashboard/userActivityShared");
                 //window.location.reload();
             }
         }
@@ -229,7 +229,7 @@ function searchActivity() {
    
     //console.log(searchActivity);
 
-    let url = '/Home/userActivityShared';
+    let url = '/dashboard/userActivityShared';
     $.ajax({
         url: url,
         data: { searchActivity: searchActivity },
@@ -247,7 +247,7 @@ function ActivityFilter(sortTypeActivity) {
     //console.log(sortTypeActivity);
    
     $.ajax({
-        url: '/Home/userActivityShared',
+        url: '/dashboard/userActivityShared',
         type: 'POST',
         data: { searchActivity: searchActivity, sortTypeActivity: sortTypeActivity },
         success: function (result) {

@@ -2,7 +2,7 @@
 
 namespace PMS_MVC.Models
 {
-    public class Login
+    public class UserInfo
     {
         [Required(ErrorMessage = "Email is required")]
         //[RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Please enter a valid e-mail address")]
@@ -16,7 +16,7 @@ namespace PMS_MVC.Models
         public string? Password { get; set; }
 
         [Required(ErrorMessage = "Confirm Password is required")]
-        [Compare("Password", ErrorMessage = "Your Password and confirm password is not match")]
+        [Compare("Password", ErrorMessage = "Your password and confirmation password do not match.")]
         [StringLength(50, ErrorMessage = "Only 50 Characaters are Accepted")]
         public string? ConfirmPassword { get; set; }
     }

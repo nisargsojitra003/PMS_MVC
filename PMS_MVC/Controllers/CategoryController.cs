@@ -11,14 +11,14 @@ namespace PMS_MVC.Controllers
 {
     public class CategoryController : Controller
     {
-        Uri baseAddress = new Uri("https://localhost:44390");
         private readonly HttpClient client;
         private readonly NotificationMessages NotificationMessages;
-        public CategoryController(NotificationMessages notificationMessages)
+        private readonly APIUrls APIUrls;
+        public CategoryController(IHttpClientFactory httpClientFactory, NotificationMessages notificationMessages, APIUrls _aPIUrls)
         {
-            client = new HttpClient();
-            client.BaseAddress = baseAddress;
+            client = httpClientFactory.CreateClient("MyApiClient");
             NotificationMessages = notificationMessages;
+            APIUrls = _aPIUrls;
         }
 
         #region GetAllCategories
@@ -72,14 +72,14 @@ namespace PMS_MVC.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
-            response = await client.GetAsync(client.BaseAddress + "category/getallcategories?" + queryString);
-
+            response = await client.GetAsync(client.BaseAddress + APIUrls.getallCategory + queryString);
+            CategoryListResponse? categoryListResponse = new CategoryListResponse();
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                dynamic responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
-                categoriesList = responseObject.categoriesList.ToObject<List<Category>>();
-                totalRecords = responseObject.totalRecords;
+                categoryListResponse = JsonConvert.DeserializeObject<CategoryListResponse>(apiResponse);
+                categoriesList = categoryListResponse.CategoryList;
+                totalRecords = categoryListResponse.TotalRecords;
             }
             int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
             ViewBag.TotalPages = totalPages;
@@ -118,7 +118,7 @@ namespace PMS_MVC.Controllers
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    response = await client.GetAsync(client.BaseAddress + $"category/getcategory/{id}?userId={userId}");
+                    response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
                     Category addCategory = new Category();
                     if (response.IsSuccessStatusCode)
                     {
@@ -164,7 +164,7 @@ namespace PMS_MVC.Controllers
                 content.Add(new StringContent(category.Description), nameof(category.Description));
                 content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
 
-                response = await client.PostAsync(client.BaseAddress + "category/create", content);
+                response = await client.PostAsync(client.BaseAddress + APIUrls.createCategory, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -209,7 +209,7 @@ namespace PMS_MVC.Controllers
                 content.Add(new StringContent(category.Description), nameof(category.Description));
                 content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
 
-                response = await client.PutAsync(client.BaseAddress + "category/edit/" + id, content);
+                response = await client.PutAsync(client.BaseAddress + APIUrls.editCategory + id, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -246,7 +246,7 @@ namespace PMS_MVC.Controllers
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            response = await client.GetAsync(client.BaseAddress + $"category/getcategory/{id}?userId={userId}");
+            response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
             Category addCategory = new Category();
             if (response.IsSuccessStatusCode)
             {
@@ -280,7 +280,7 @@ namespace PMS_MVC.Controllers
 
             StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
-            response = await client.PostAsync(client.BaseAddress + "category/delete/" + id, content);
+            response = await client.PostAsync(client.BaseAddress + APIUrls.deleteCategory + id, content);
             if (response.IsSuccessStatusCode)
             {
                 TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category");

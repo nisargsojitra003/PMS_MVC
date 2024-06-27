@@ -4,10 +4,16 @@ using PMS_MVC.Models;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+string? baseUrl = builder.Configuration.GetSection("ApiSettings:BaseUrl").Value;
+builder.Services.AddHttpClient("MyApiClient", client =>
+{
+    client.BaseAddress = new Uri(baseUrl);
+});
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<NotificationMessages>();
+builder.Services.AddScoped<APIUrls>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -25,7 +31,7 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/dashboard/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -33,7 +39,7 @@ if (!app.Environment.IsDevelopment())
 //following condition use for clear cache and when we clicked in back than not open content.
 app.Use(async (context, next) =>
 {
-    if (context.Request.Path.StartsWithSegments("/Home"))
+    if (context.Request.Path.StartsWithSegments("/Dashboard"))
     {
         context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
         context.Response.Headers.Add("Pragma", "no-cache");
@@ -66,7 +72,7 @@ app.Use(async (ctx, next) =>
         //Re-execute the request so the user gets the error page
         string originalPath = ctx.Request.Path.Value;
         ctx.Items["originalPath"] = originalPath;
-        ctx.Request.Path = "/home/notfound";
+        ctx.Request.Path = "/dashboard/notfound";
         await next();
     }
 });

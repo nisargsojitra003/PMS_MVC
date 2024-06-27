@@ -8,45 +8,45 @@ using System.Web;
 
 namespace PMS_MVC.Controllers
 {
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        Uri baseAddress = new Uri("https://localhost:44390");
+        private readonly ILogger<DashboardController> _logger;
         private readonly HttpClient client;
         private readonly NotificationMessages NotificationMessages;
-        public HomeController(ILogger<HomeController> logger, NotificationMessages notificationMessages)
+        private readonly APIUrls APIUrls;
+        public DashboardController(ILogger<DashboardController> logger, IHttpClientFactory httpClientFactory, NotificationMessages notificationMessages, APIUrls aPIUrls)
         {
             _logger = logger;
-            client = new HttpClient();
-            client.BaseAddress = baseAddress;
+            client = httpClientFactory.CreateClient("MyApiClient");
             NotificationMessages = notificationMessages;
+            APIUrls = aPIUrls;
         }
 
         #region HomePage
         /// <summary>
         /// main page view(total count of category and product)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Dashboard data</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             string Token = HttpContext.Session.GetString("jwtToken") ?? "";
             if (!string.IsNullOrEmpty(Token))
             {
-                TotalCount totalCount = new TotalCount();
+                DashboardData dashboardData = new DashboardData();
 
                 int? id = HttpContext.Session.GetInt32("userId");
                 HttpResponseMessage response = null;
                 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                
-                response = await client.GetAsync(client.BaseAddress + $"home/index?id={id}");
+                response = await client.GetAsync(client.BaseAddress + APIUrls.dashboard + id);
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    totalCount = JsonConvert.DeserializeObject<TotalCount>(data);
+                    dashboardData = JsonConvert.DeserializeObject<DashboardData>(data);
                 }
-                return View(totalCount);
+                return View(dashboardData);
             }
             else
             {
@@ -94,13 +94,14 @@ namespace PMS_MVC.Controllers
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
             }
-            response = await client.GetAsync(client.BaseAddress + "product/getallactivity?" + queryString);
+            response = await client.GetAsync(client.BaseAddress + APIUrls.getAllActivity + queryString);
+            ActivityListResponse activityListResponse = new ActivityListResponse();
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                dynamic responseObject = JsonConvert.DeserializeObject<dynamic>(apiResponse);
-                activityList = responseObject.activityList.ToObject<List<UserActivity>>();
-                totalRecords = responseObject.totalActivities;
+                activityListResponse = JsonConvert.DeserializeObject<ActivityListResponse>(apiResponse);
+                activityList = activityListResponse.ActivityList;
+                totalRecords = activityListResponse.TotalRecords;
             }
             int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.activityPageSize));
             ViewBag.TotalPages = totalPages;

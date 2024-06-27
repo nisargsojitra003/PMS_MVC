@@ -25,23 +25,23 @@
         }
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 topnav">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="home" asp-action="index">PMS</a>
+                <a class="navbar-brand" asp-area="" asp-controller="dashboard" asp-action="index">PMS</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="home" asp-action="index" aria-current="page">Home</a>
+                            <a class="nav-link text-dark" asp-controller="dashboard" asp-action="index" aria-current="page">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="home" asp-action="useractivity">My Activity</a>
+                            <a class="nav-link text-dark" asp-controller="dashboard" asp-action="useractivity">My Activity</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item d-flex align-items-center">
                             <p class="text-dark mb-0 me-3">Welcome : <strong>@userEmail</strong></p>
-                            <button type="button" onclick="location.href='@Url.Action("LogOut", "Home")'" class="btn btn-outline-danger">Logout</button>
+                            <button type="button" onclick="location.href='@Url.Action("LogOut", "dashboard")'" class="btn btn-outline-danger">Logout</button>
                         </li>
                     </ul>
                 </div>
@@ -55,6 +55,13 @@
             @* <partial name="_Notification" /> *@
         </main>
     </div>
+    @* <script>
+        $(document).ready(function () {
+            $('form').on('submit', function () {
+                $('#loader').show();
+            });
+        });
+    </script> *@
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

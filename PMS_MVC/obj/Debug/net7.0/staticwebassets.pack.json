@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\PMS_MVC.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC\\wwwroot\\css\\loader.css",
+      "PackagePath": "staticwebassets\\css\\loader.css"
+    },
+    {
       "Id": "C:\\Users\\pca103\\source\\repos\\PMS_MVC\\PMS_MVC\\wwwroot\\css\\login.css",
       "PackagePath": "staticwebassets\\css\\login.css"
     },
