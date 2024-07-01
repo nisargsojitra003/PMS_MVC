@@ -30,29 +30,40 @@ function validateForm() {
         return false;
     }
 
-    var maxSize = 5 * 1024 * 1024; 
+    var maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
         alert("File size exceeds the maximum limit of 5MB.");
         return false;
     }
-    return true; // Form submission allowed if all validations pass
+    return true;
 }
 
 function searchCategory() {
-
     var searchName = $("#searchCategoryTab").val();
     var searchCode = $("#searchCategoryCodeTab").val();
     var description = $("#searchCategoryDescription").val();
-    //console.log(searchName);
-
+    console.log(searchName);
     let url = '/Category/listshared';
     $.ajax({
         url: url,
         data: { searchName: searchName, searchCode: searchCode, description: description },
         type: 'GET',
+        beforeSend: function () {
+            console.log("display");
+            DisplayLoader();
+            debugger;
+        },
         success: function (result) {
-            //console.log(result);
+            console.log("complete");
             $("#categoryListdata").html(result);
+        },
+        complete: function () {
+            console.log("hide");
+            HideLoader();
+        },
+        error: function (error) {
+            console.log('Error:', error);
+            HideLoader();
         }
     });
 }
@@ -63,15 +74,13 @@ function searchProcudtName() {
     var searchCategoryTag = $("#searchCategoryTag").val();
     var searchDescription = $("#searchDescription").val();
     var searchCategory = $("#searchCategory").val();
-    //console.log(searchProduct);
-
+   
     let url = '/Product/productShared';
     $.ajax({
         url: url,
         data: { searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchDescription: searchDescription, searchCategory: searchCategory },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#productListdata").html(result);
         }
     });
@@ -82,7 +91,6 @@ function searchCategoryTag() {
     var searchProduct = $("#searchProduct").val();
     var searchDescription = $("#searchDescription").val();
     var searchCategory = $("#searchCategory").val();
-    //console.log(searchCategoryTag);
 
     let url = '/Product/productShared';
     $.ajax({
@@ -90,7 +98,6 @@ function searchCategoryTag() {
         data: { searchCategoryTag: searchCategoryTag, searchProduct: searchProduct, searchDescription: searchDescription, searchCategory: searchCategory },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#productListdata").html(result);
         }
     });
@@ -101,9 +108,6 @@ function searchDescription() {
     var searchProduct = $("#searchProduct").val();
     var searchCategoryTag = $("#searchCategoryTag").val();
     var searchCategory = $("#searchCategory").val();
-    console.log(searchDescription);
-    console.log(searchProduct);
-    console.log(searchCategoryTag);
 
     let url = '/Product/productShared';
     $.ajax({
@@ -111,7 +115,6 @@ function searchDescription() {
         data: { searchDescription: searchDescription, searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchCategory: searchCategory },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#productListdata").html(result);
         }
     });
@@ -140,7 +143,6 @@ function changeProductpagesize() {
         success: function (response) {
             if (response.success) {
                 $("#productListdata").load("productShared");
-                //window.location.reload();
             }
         }
     });
@@ -148,14 +150,12 @@ function changeProductpagesize() {
 
 
 function changePageInProductTable(productPageNumber) {
-    //console.log(productPageNumber);
     $.ajax({
         url: "/Product/ChangePage",
         data: { productPageNumber: productPageNumber },
         success: function (response) {
             if (response.success) {
                 $("#productListdata").load("productShared");
-                //window.location.reload();
             }
         }
     });
@@ -165,7 +165,6 @@ function changePageInProductTable(productPageNumber) {
 //////////Category Script////////////
 function changePageSize() {
     var catPageSize = $("#pagesizeCategory").val();
-    //console.log(catPageSize);
     $.ajax({
         url: "/Category/ChangePageSize",
         data: { catPageSize: catPageSize },
@@ -180,14 +179,12 @@ function changePageSize() {
 
 
 function changePageInTable(pageNumberCategory) {
-    //console.log(pageNumberCategory);
     $.ajax({
         url: "/Category/ChangePage",
         data: { pageNumberCategory: pageNumberCategory },
         success: function (response) {
             if (response.success) {
                 $("#categoryListdata").load("listshared");
-                //window.location.reload();
             }
         }
     });
@@ -197,7 +194,6 @@ function changePageInTable(pageNumberCategory) {
 /////////////////////////Activity Page////////////////////////////
 function changePageSizeActivity() {
     var activityPageSize = $("#pagesizeActivity").val();
-    //console.log(activityPageSize);
     $.ajax({
         url: "/dashboard/ChangeActivityPageSize",
         data: { activityPageSize: activityPageSize },
@@ -210,14 +206,12 @@ function changePageSizeActivity() {
 }
 
 function changePageInActivityTable(activityPageNumber) {
-    //console.log(activityPageNumber);
     $.ajax({
         url: "/dashboard/ChangeActivityPage",
         data: { activityPageNumber: activityPageNumber },
         success: function (response) {
             if (response.success) {
                 $("#activityListdata").load("/dashboard/userActivityShared");
-                //window.location.reload();
             }
         }
     });
@@ -226,8 +220,6 @@ function changePageInActivityTable(activityPageNumber) {
 function searchActivity() {
 
     var searchActivity = $("#searchActivityTab").val();
-   
-    //console.log(searchActivity);
 
     let url = '/dashboard/userActivityShared';
     $.ajax({
@@ -235,7 +227,6 @@ function searchActivity() {
         data: { searchActivity: searchActivity },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#activityListdata").html(result);
         }
     });
@@ -244,14 +235,12 @@ function searchActivity() {
 
 function ActivityFilter(sortTypeActivity) {
     var searchActivity = $("#searchActivityTab").val();
-    //console.log(sortTypeActivity);
-   
+
     $.ajax({
         url: '/dashboard/userActivityShared',
         type: 'POST',
         data: { searchActivity: searchActivity, sortTypeActivity: sortTypeActivity },
         success: function (result) {
-            //console.log(result);
             $("#activityListdata").html(result);
         }
     });
@@ -263,7 +252,6 @@ function searchCategory() {
     var searchName = $("#searchCategoryTab").val();
     var searchCode = $("#searchCategoryCodeTab").val();
     var description = $("#searchCategoryDescription").val();
-    //console.log(searchName);
 
     let url = '/Category/listshared';
     $.ajax({
@@ -271,7 +259,6 @@ function searchCategory() {
         data: { searchName: searchName, searchCode: searchCode, description: description },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#categoryListdata").html(result);
         }
     });
@@ -282,7 +269,6 @@ function searchCode() {
     var searchCode = $("#searchCategoryCodeTab").val();
     var searchName = $("#searchCategoryTab").val();
     var description = $("#searchCategoryDescription").val();
-    //console.log(searchCode);
 
     let url = '/Category/listshared';
     $.ajax({
@@ -290,7 +276,6 @@ function searchCode() {
         data: { searchCode: searchCode, searchName: searchName, description: description },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#categoryListdata").html(result);
         }
     });
@@ -303,7 +288,6 @@ function searchCategoryDescription() {
     var searchName = $("#searchCategoryTab").val();
     var searchCode = $("#searchCategoryCodeTab").val();
 
-    //console.log(description);
 
     let url = '/Category/listshared';
     $.ajax({
@@ -311,7 +295,6 @@ function searchCategoryDescription() {
         data: { description: description, searchName: searchName, searchCode: searchCode },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#categoryListdata").html(result);
         }
     });
@@ -326,7 +309,6 @@ function CategoryFilter(sortType) {
         type: 'POST',
         data: { sortType: sortType, searchCode: searchCode, searchName: searchName, description: description },
         success: function (result) {
-            //console.log(result);
             $("#categoryListdata").html(result);
         }
     });
@@ -342,7 +324,6 @@ function ProductFilter(sortTypeProduct) {
         type: 'POST',
         data: { sortTypeProduct: sortTypeProduct, searchDescription: searchDescription, searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchCategory: searchCategory },
         success: function (result) {
-            //console.log(result);
             $("#productListdata").html(result);
         }
     });
@@ -353,7 +334,6 @@ function searchProductCategory() {
     var searchCategoryTag = $("#searchCategoryTag").val();
     var searchDescription = $("#searchDescription").val();
     var searchCategory = $("#searchCategory").val();
-    //console.log(searchProduct);
 
     let url = '/Product/productShared';
     $.ajax({
@@ -361,8 +341,49 @@ function searchProductCategory() {
         data: { searchProduct: searchProduct, searchCategoryTag: searchCategoryTag, searchDescription: searchDescription, searchCategory: searchCategory },
         type: 'GET',
         success: function (result) {
-            //console.log(result);
             $("#productListdata").html(result);
         }
     });
 }
+
+
+function DeleteCategoryByValue() {
+    var id = $('#CategoryIdVal').val();
+    $.ajax({
+        url: '/Category/Delete',
+        data: { id: id },
+        success: function (response) {
+            if (response.success) {
+                toastr.success('Category deleted successfully!');
+                $('#categoryListdata').load("/category/listshared");
+            }
+            else {
+                toastr.error('Failed to delete category!');
+                $('#categoryListdata').load("/category/listshared");
+            }
+        }
+    });
+}
+
+function DisplayLoader() {
+    $("#loader").show();
+}
+
+function HideLoader() {
+    setTimeout(function () {
+        $("#loader").hide();
+    }, 2000); 
+}
+
+
+$(window).on("beforeunload", function () {
+    DisplayLoader();
+});
+
+$(document).on("submit", "form", function () {
+    DisplayLoader();
+});
+
+$(document).ready(function () {
+    HideLoader();
+});

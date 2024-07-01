@@ -8,7 +8,7 @@
 <div class="container d-flex justify-content-center align-items-center">
     <div class="shadow-lg rounded bg-white p-4 w-100" style="max-width: 600px;">
         <div class="formTitle mt-3" id="formTile"><h5>Sign In</h5></div>
-        <form asp-action="Login" asp-controller="Login" method="post" class="dark-mode2" id="addCategoryForm">
+        <form asp-action="login" asp-controller="login"  method="post" class="dark-mode2" id="LoginInSystem">
             <div class="row mb-3">
                 <div class="col-12">
                     <input type="hidden" />
@@ -119,4 +119,30 @@
             }`;
     });
 </script>
+<script>
+    // $('#LoginInSystem').submit(function (e) {
+    //     e.preventDefault();
+    //     if ($("#LoginInSystem").valid()) {
+    //         var data = new FormData(this);
+    //         $.ajax({
+    //             url: "/Login/Login",
+    //             data: data,
+    //             type: 'POST',
+    //             processData: false,
+    //             contentType: false,
+    //             success: function (response) {
+    //                 DisplayLoader();
+    //                 if (response.success) {
+    //                     HideLoader();
+    //                     window.location.href = "/dashboard/index"
+    //                 }
+    //                 else {
+    //                     DisplayLoader();
+    //                     window.alert("error!");
+    //                 }
+    //             }
+    //         });
+    //     }
 
+    // })
+</script>

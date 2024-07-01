@@ -76,10 +76,14 @@ namespace PMS_MVC.Controllers
             searchFilter.activityPageNumber = HttpContext.Session.GetString("activityPageNumber") ?? "1";
             searchFilter.activityPageSize = HttpContext.Session.GetString("activityPageSize") ?? "5";
             searchFilter.userId = HttpContext.Session.GetInt32("userId");
+           
             int totalRecords = 0;
             ViewBag.Currentpagesize = searchFilter.activityPageSize;
+            
             List<UserActivity> activityList = new List<UserActivity>();
+            
             NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);
+            
             query["activityPageNumber"] = searchFilter.activityPageNumber;
             query["activityPageSize"] = searchFilter.activityPageSize;
             query["searchActivity"] = searchFilter.searchActivity;
@@ -89,13 +93,18 @@ namespace PMS_MVC.Controllers
             string queryString = query.ToString();
 
             string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+            
             HttpResponseMessage response = null;
+            
             if (!string.IsNullOrEmpty(Token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
             }
+            
             response = await client.GetAsync(client.BaseAddress + APIUrls.getAllActivity + queryString);
+            
             ActivityListResponse activityListResponse = new ActivityListResponse();
+            
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
@@ -103,6 +112,7 @@ namespace PMS_MVC.Controllers
                 activityList = activityListResponse.ActivityList;
                 totalRecords = activityListResponse.TotalRecords;
             }
+            
             int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.activityPageSize));
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = int.Parse(searchFilter.activityPageNumber);

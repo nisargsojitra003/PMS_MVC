@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PMS_MVC.Models;
-using System.Net.Http;
 using System.Security.Claims;
 
 namespace PMS_MVC.Controllers
@@ -46,27 +45,31 @@ namespace PMS_MVC.Controllers
         /// <returns>If authenticate user are there than return to home page</returns>
         [HttpPost]
         public async Task<ActionResult> Login([FromForm] UserInfo userInfo)
-        {
-
+         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
                 content.Add(new StringContent(userInfo.Email), nameof(userInfo.Email));
                 content.Add(new StringContent(userInfo.Password), nameof(userInfo.Password));
 
                 HttpResponseMessage response = await client.PostAsync(client.BaseAddress + APIUrls.login, content);
+                
                 UserResponse userResponse = new UserResponse();
+                
                 if (response.IsSuccessStatusCode)
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     userResponse = JsonConvert.DeserializeObject<UserResponse>(apiResponse);
+                    
                     HttpContext.Session.SetString("email", userInfo.Email);
                     HttpContext.Session.SetString("jwtToken", userResponse.JwtToken);
                     HttpContext.Session.SetInt32("userId", userResponse.UserId);
                     HttpContext.Session.SetString("role", userResponse.UserRole);
+                    
                     ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                     identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, userResponse.UserRole));
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                    
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                     TempData[NotificationType.success.ToString()] = NotificationMessages.loginSuccessToaster;

@@ -53,7 +53,9 @@ namespace PMS_MVC.Controllers
             ViewBag.Currentpagesize = searchFilter.categoryPageSize;
 
             List<Category> categoriesList = new List<Category>();
+            
             NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);
+            
             query["searchName"] = searchFilter.searchName;
             query["SearchCode"] = searchFilter.SearchCode;
             query["description"] = searchFilter.description;
@@ -73,7 +75,9 @@ namespace PMS_MVC.Controllers
             }
 
             response = await client.GetAsync(client.BaseAddress + APIUrls.getallCategory + queryString);
+            
             CategoryListResponse? categoryListResponse = new CategoryListResponse();
+            
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
@@ -81,10 +85,10 @@ namespace PMS_MVC.Controllers
                 categoriesList = categoryListResponse.CategoryList;
                 totalRecords = categoryListResponse.TotalRecords;
             }
+            
             int totalPages = (int)Math.Ceiling((double)totalRecords / int.Parse(searchFilter.categoryPageSize));
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = int.Parse(searchFilter.categoryPageNumber);
-
 
             return PartialView("listshared", categoriesList);
         }
@@ -154,7 +158,9 @@ namespace PMS_MVC.Controllers
             {
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
+                
                 HttpResponseMessage response = null;
+                
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -197,7 +203,9 @@ namespace PMS_MVC.Controllers
             {
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
+                
                 HttpResponseMessage response = null;
+                
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -241,13 +249,18 @@ namespace PMS_MVC.Controllers
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
             int? userId = HttpContext.Session.GetInt32("userId");
+            
             HttpResponseMessage response = null;
+            
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
+            
             response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
+            
             Category addCategory = new Category();
+            
             if (response.IsSuccessStatusCode)
             {
                 string data = await response.Content.ReadAsStringAsync();
@@ -258,7 +271,7 @@ namespace PMS_MVC.Controllers
                 return View("invalid");
             }
             return View(addCategory);
-        }
+        }       
         #endregion
 
         #region DeleteProduct
@@ -285,16 +298,19 @@ namespace PMS_MVC.Controllers
             {
                 TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Category");
                 ChangePage(1);
+                //return Json(new { success = true });
                 return RedirectToAction("list");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 TempData[NotificationType.error.ToString()] = NotificationMessages.unabledeleteToaster;
+                //return Json(new { success = false });
                 return RedirectToAction("list");
             }
             else
             {
                 TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
+                //return Json(new { success = false });
                 return RedirectToAction("list");
             }
         }
