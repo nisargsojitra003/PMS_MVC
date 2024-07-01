@@ -37,7 +37,7 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <div class="form-floating">
-                        <input asp-for="@Model.Code" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control" placeholder="Category Code">
+                        <input asp-for="@Model.Code" type="text" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control" placeholder="Category Code" oninput="validateCodeInput(this)">
                         <label asp-for="@Model.Code">Category Code</label>
                         <span asp-validation-for="@Model.Code" class="text-danger"></span>
                     </div>
@@ -66,3 +66,8 @@
 </div>
 
 <partial name="_ValidationScriptsPartial" />
+<script>
+    function validateCodeInput(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+</script>

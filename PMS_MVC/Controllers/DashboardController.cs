@@ -63,7 +63,16 @@ namespace PMS_MVC.Controllers
         /// <returns></returns>
         public IActionResult UserActivity()
         {
-            return View();
+            string token = HttpContext.Session.GetString("jwtToken")??"";
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("login","login");
+            }
         }
 
         /// <summary>

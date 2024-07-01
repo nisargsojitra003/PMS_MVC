@@ -25,7 +25,7 @@
         public string loginWarningToaster = "Account doesn't exist with entered Email. Kindly create an account.";
     }
 
-    public enum NotificationType
+    public enum NotificationTypeEnum
     {
         success,
         warning,

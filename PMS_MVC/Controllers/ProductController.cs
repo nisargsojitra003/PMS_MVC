@@ -8,7 +8,6 @@ using System.Web;
 
 namespace PMS_MVC.Controllers
 {
-
     public class ProductController : Controller
     {
         private readonly HttpClient client;
@@ -107,7 +106,7 @@ namespace PMS_MVC.Controllers
         #endregion
 
 
-        
+
 
         #region AddProduct
         /// <summary>
@@ -152,7 +151,7 @@ namespace PMS_MVC.Controllers
                 using (MultipartFormDataContent content = new MultipartFormDataContent())
                 {
                     addProduct.userId = HttpContext.Session.GetInt32("userId");
-                    // Add form data
+
                     content.Add(new StringContent(addProduct.ProductName), nameof(addProduct.ProductName));
                     content.Add(new StringContent(addProduct.Description), nameof(addProduct.Description));
                     content.Add(new StringContent(addProduct.Price.ToString()), nameof(addProduct.Price));
@@ -163,11 +162,13 @@ namespace PMS_MVC.Controllers
                     if (addProduct.Fileupload != null)
                     {
                         StreamContent fileContent = new StreamContent(addProduct.Fileupload.OpenReadStream());
+
                         fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                         {
                             Name = nameof(addProduct.Fileupload),
                             FileName = addProduct.Fileupload.FileName
                         };
+
                         fileContent.Headers.ContentType = new MediaTypeHeaderValue(addProduct.Fileupload.ContentType);
                         content.Add(fileContent);
                     }
@@ -175,6 +176,7 @@ namespace PMS_MVC.Controllers
                     string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
                     HttpResponseMessage response = null;
+
                     if (!string.IsNullOrEmpty(token))
                     {
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -184,7 +186,7 @@ namespace PMS_MVC.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product"); ;
+                        TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product"); ;
                         return RedirectToAction("list");
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -204,12 +206,12 @@ namespace PMS_MVC.Controllers
                             string data = await response1.Content.ReadAsStringAsync();
                             addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
                         }
-                        TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
-                        return View("add",addProduct);
+                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productWarningToaster;
+                        return View("add", addProduct);
                     }
                     else
                     {
-                        TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
+                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
                         return RedirectToAction("list");
                     }
 
@@ -236,7 +238,6 @@ namespace PMS_MVC.Controllers
 
             try
             {
-                // Get product details
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 editProduct.userId = HttpContext.Session.GetInt32("userId");
                 int? userId = HttpContext.Session.GetInt32("userId");
@@ -244,12 +245,16 @@ namespace PMS_MVC.Controllers
                 NameValueCollection query = HttpUtility.ParseQueryString(string.Empty);
                 query["id"] = id.ToString();
                 query["userId"] = userId.ToString();
+
                 string queryString = query.ToString();
+
                 HttpResponseMessage response = null;
+
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
+
                 response = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + id + APIUrls.userId + userId);
 
                 if (response.IsSuccessStatusCode)
@@ -262,10 +267,12 @@ namespace PMS_MVC.Controllers
                         return StatusCode(500, "Error deserializing product data.");
                     }
                 }
+
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     return View("invalid");
                 }
+
                 else
                 {
                     return StatusCode((int)response.StatusCode, "Error retrieving product data.");
@@ -322,12 +329,12 @@ namespace PMS_MVC.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData[NotificationType.success.ToString()] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product");
+                        TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product");
                         return RedirectToAction("list");
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        TempData[NotificationType.error.ToString()] = NotificationMessages.productWarningToaster;
+                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productWarningToaster;
                         int? userId = HttpContext.Session.GetInt32("userId");
                         // Retrieve product details again to show in the edit form
                         HttpResponseMessage getProductResponse = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + id + APIUrls.userId + userId);
@@ -420,41 +427,30 @@ namespace PMS_MVC.Controllers
         /// </summary>
         /// <param name="id">product id</param>
         /// <returns></returns>
-        public async Task<ActionResult> Delete(int id)
+        public async Task<JsonResult> Delete(int id)
         {
-            try
+            string data = JsonConvert.SerializeObject(id);
+            StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+
+            HttpResponseMessage response = null;
+            if (!string.IsNullOrEmpty(token))
             {
-                string data = JsonConvert.SerializeObject(id);
-                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
-
-                string token = HttpContext.Session.GetString("jwtToken") ?? "";
-
-                HttpResponseMessage response = null;
-                if (!string.IsNullOrEmpty(token))
-                {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                }
-                response = await client.PostAsync(client.BaseAddress + APIUrls.deleteProduct + id, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Product");
-                    ChangePage(1);
-                    return RedirectToAction("list");
-                }
-                else
-                {
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
-
-                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
-                    return View();
-                }
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            catch (Exception ex)
+            response = await client.PostAsync(client.BaseAddress + APIUrls.deleteProduct + id, content);
+
+            if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Internal server error.");
+                ChangePage(1);
+                return Json(new { success = true });
+            }
+            else
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
+                return Json(new { success = false });
             }
         }
         #endregion
@@ -483,7 +479,7 @@ namespace PMS_MVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData[NotificationType.success.ToString()] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Product's Image");
+                    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.deleteSuccessToaster.Replace("{1}", "Product's Image");
                     return RedirectToAction("list");
                 }
                 else
@@ -491,7 +487,7 @@ namespace PMS_MVC.Controllers
                     string responseContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error deleting product. Status code: {response.StatusCode}, Response content: {responseContent}");
 
-                    TempData[NotificationType.error.ToString()] = NotificationMessages.productErrorToaster;
+                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productErrorToaster;
                     return View();
                 }
             }
@@ -503,7 +499,7 @@ namespace PMS_MVC.Controllers
         }
         #endregion
 
-       
+
 
         #region SessionVariable
         public JsonResult ChangePage(int productPageNumber)

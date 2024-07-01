@@ -156,13 +156,13 @@ else
             </div>
             <div class="modal-body">
                 <!-- Form -->
-                <form asp-action="Delete" asp-controller="Product" id="Accpreq" method="post">
+                <form  id="Accpreq" method="post">
                     <input type="hidden" value="" id="ProductIdVal" name="id">
                     <div class="mb-3">
                         <p><strong>Are you sure, to want Delete this Product?</strong></p>
                     </div>
                     <div class="d-flex justify-content-end align-items-end">
-                        <button type="submit" class="btn btn-danger ">Delete</button>
+                        <button onclick="DeleteProductByValue()" type="button" class="btn btn-danger ">Delete</button>
                         <button type="button" class="btn btn-success ms-2" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>

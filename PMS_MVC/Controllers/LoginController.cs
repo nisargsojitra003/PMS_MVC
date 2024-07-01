@@ -9,7 +9,6 @@ namespace PMS_MVC.Controllers
 {
     public class LoginController : Controller
     {
-        
         private readonly HttpClient client;
         private readonly NotificationMessages NotificationMessages;
         private readonly APIUrls APIUrls;
@@ -45,44 +44,44 @@ namespace PMS_MVC.Controllers
         /// <returns>If authenticate user are there than return to home page</returns>
         [HttpPost]
         public async Task<ActionResult> Login([FromForm] UserInfo userInfo)
-         {
+        {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
                 content.Add(new StringContent(userInfo.Email), nameof(userInfo.Email));
                 content.Add(new StringContent(userInfo.Password), nameof(userInfo.Password));
 
                 HttpResponseMessage response = await client.PostAsync(client.BaseAddress + APIUrls.login, content);
-                
+
                 UserResponse userResponse = new UserResponse();
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     userResponse = JsonConvert.DeserializeObject<UserResponse>(apiResponse);
-                    
+
                     HttpContext.Session.SetString("email", userInfo.Email);
                     HttpContext.Session.SetString("jwtToken", userResponse.JwtToken);
                     HttpContext.Session.SetInt32("userId", userResponse.UserId);
                     HttpContext.Session.SetString("role", userResponse.UserRole);
-                    
+
                     ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                     identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, userResponse.UserRole));
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                    
+
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                    TempData[NotificationType.success.ToString()] = NotificationMessages.loginSuccessToaster;
+                    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.loginSuccessToaster;
                     return RedirectToAction(userResponse.ActionName, userResponse.ControllerName);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData[NotificationType.error.ToString()] = NotificationMessages.loginErrorToaster;
+                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.loginErrorToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
-                    TempData[NotificationType.warning.ToString()] = NotificationMessages.loginWarningToaster;
+                    TempData[nameof(NotificationTypeEnum.warning)] = NotificationMessages.loginWarningToaster;
                     return RedirectToAction("Login", "Login");
                 }
             }
@@ -109,7 +108,6 @@ namespace PMS_MVC.Controllers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
-
                 content.Add(new StringContent(userInfo.Email), nameof(userInfo.Email));
                 content.Add(new StringContent(userInfo.Password), nameof(userInfo.Password));
                 content.Add(new StringContent(userInfo.ConfirmPassword), nameof(userInfo.ConfirmPassword));
@@ -118,17 +116,17 @@ namespace PMS_MVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData[NotificationType.success.ToString()] = NotificationMessages.accountCreatedSuccessToaster;
+                    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.accountCreatedSuccessToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    TempData[NotificationType.error.ToString()] = NotificationMessages.accountCreatedErrorToaster;
+                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.accountCreatedErrorToaster;
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
-                    TempData[NotificationType.error.ToString()] = NotificationMessages.systemErrorToaster;
+                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
                     return View(userInfo);
                 }
             }

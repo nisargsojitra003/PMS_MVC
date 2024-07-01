@@ -19,6 +19,7 @@
         public int? searchCategory { get; set; } = 0;
         public string? productPageSize {get; set;}
         public string? productPageNumber {get; set;}
+
         //UserActivity list search filter property
         public string? searchActivity {  get; set; }
         public int? sortTypeActivity { get; set; } = 0;

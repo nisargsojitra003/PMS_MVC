@@ -354,12 +354,34 @@ function DeleteCategoryByValue() {
         data: { id: id },
         success: function (response) {
             if (response.success) {
-                toastr.success('Category deleted successfully!');
+                toastr.success('Category has been deleted successfully!');
+                $('#delCategoryModal').modal('toggle');
                 $('#categoryListdata').load("/category/listshared");
             }
             else {
-                toastr.error('Failed to delete category!');
+                toastr.error("Selected Category have already products so you can't delete this category!");
+                $('#delCategoryModal').modal('toggle');
                 $('#categoryListdata').load("/category/listshared");
+            }
+        }
+    });
+}
+
+function DeleteProductByValue() {
+    var id = $('#ProductIdVal').val();
+    $.ajax({
+        url: '/Product/Delete',
+        data: { id: id },
+        success: function (response) {
+            if (response.success) {
+                toastr.success('Product has been deleted successfully!');
+                $('#delProductModal').modal('toggle');
+                $('#productListdata').load("/product/ProductShared");
+            }
+            else {
+                toastr.error("Something went Wrong!");
+                $('#delCategoryModal').modal('toggle');
+                $('#productListdata').load("/product/ProductShared");   
             }
         }
     });
