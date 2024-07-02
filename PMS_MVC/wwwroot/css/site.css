@@ -44,3 +44,12 @@ body {
         .topnav a.active {
             border-bottom: 3px solid red;
         }
+
+.button-container {
+    display: inline-block;
+}
+
+.inline-button {
+    display: inline-block;
+    margin-right: 5px; /* Adjust spacing as needed */
+}

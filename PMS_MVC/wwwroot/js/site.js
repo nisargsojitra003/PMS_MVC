@@ -352,6 +352,11 @@ function DeleteCategoryByValue() {
     $.ajax({
         url: '/Category/Delete',
         data: { id: id },
+        beforeSend: function () {
+            console.log("display");
+            DisplayLoader();
+            debugger;
+        },
         success: function (response) {
             if (response.success) {
                 toastr.success('Category has been deleted successfully!');
@@ -372,14 +377,22 @@ function DeleteProductByValue() {
     $.ajax({
         url: '/Product/Delete',
         data: { id: id },
+        beforeSend: function () {
+            console.log("display");
+            DisplayLoader();
+            debugger;
+        },
         success: function (response) {
+            DisplayLoader();
             if (response.success) {
                 toastr.success('Product has been deleted successfully!');
+                HideLoader();
                 $('#delProductModal').modal('toggle');
                 $('#productListdata').load("/product/ProductShared");
             }
             else {
                 toastr.error("Something went Wrong!");
+                HideLoader();
                 $('#delCategoryModal').modal('toggle');
                 $('#productListdata').load("/product/ProductShared");   
             }

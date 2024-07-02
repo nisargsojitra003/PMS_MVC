@@ -73,22 +73,8 @@
     });
 
     $(document).on('click', '#categoryProductClear', function () {
-        $('#searchProduct').val('');
-        $('#searchCategoryTag').val('');
+        $('#searchProduct,#searchCategoryTag,#searchDescription').val('');
         $('#searchCategory').val(0);
-        $('#searchDescription').val('');
         $('#productListdata').load("/product/productShared");
     });
 </script>
-
-<style>
-    .button-container {
-        display: inline-block;
-    }
-
-    .inline-button {
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-</style>

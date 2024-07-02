@@ -32,7 +32,7 @@ namespace PMS_MVC.Controllers
             {
                 AddProduct addProduct = new AddProduct();
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -81,19 +81,19 @@ namespace PMS_MVC.Controllers
 
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            ProductListResponse productListResponse = new ProductListResponse();
+            SharedListResponse<AddProduct> productListResponse = new SharedListResponse<AddProduct>();
             response = await client.GetAsync(client.BaseAddress + APIUrls.getAllProducts + queryString);
 
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                productListResponse = JsonConvert.DeserializeObject<ProductListResponse>(apiResponse);
-                productList = productListResponse.ProductList;
+                productListResponse = JsonConvert.DeserializeObject<SharedListResponse<AddProduct>>(apiResponse);
+                productList = productListResponse.List;
                 totalRecords = productListResponse.TotalRecords;
             }
 
@@ -118,7 +118,7 @@ namespace PMS_MVC.Controllers
             AddProduct addProduct = new AddProduct();
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -175,7 +175,7 @@ namespace PMS_MVC.Controllers
 
                     string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-                    HttpResponseMessage response = null;
+                    HttpResponseMessage response = new HttpResponseMessage();
 
                     if (!string.IsNullOrEmpty(token))
                     {
@@ -193,7 +193,7 @@ namespace PMS_MVC.Controllers
                     {
                         string token1 = HttpContext.Session.GetString("jwtToken") ?? "";
 
-                        HttpResponseMessage response1 = null;
+                        HttpResponseMessage response1 = new HttpResponseMessage();
                         if (!string.IsNullOrEmpty(token1))
                         {
                             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token1);
@@ -248,7 +248,7 @@ namespace PMS_MVC.Controllers
 
                 string queryString = query.ToString();
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -318,7 +318,7 @@ namespace PMS_MVC.Controllers
                     }
 
                     string token = HttpContext.Session.GetString("jwtToken") ?? "";
-                    HttpResponseMessage response = null;
+                    HttpResponseMessage response = new HttpResponseMessage();
 
                     if (!string.IsNullOrEmpty(token))
                     {
@@ -386,7 +386,7 @@ namespace PMS_MVC.Controllers
                 // Get product details
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 int? userId = HttpContext.Session.GetInt32("userId");
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -434,7 +434,7 @@ namespace PMS_MVC.Controllers
 
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -470,7 +470,7 @@ namespace PMS_MVC.Controllers
 
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(token))
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

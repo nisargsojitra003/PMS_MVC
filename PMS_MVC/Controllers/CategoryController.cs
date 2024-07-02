@@ -68,7 +68,7 @@ namespace PMS_MVC.Controllers
 
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -76,13 +76,13 @@ namespace PMS_MVC.Controllers
 
             response = await client.GetAsync(client.BaseAddress + APIUrls.getallCategory + queryString);
 
-            CategoryListResponse? categoryListResponse = new CategoryListResponse();
+            SharedListResponse<Category> categoryListResponse = new SharedListResponse<Category>();
 
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                categoryListResponse = JsonConvert.DeserializeObject<CategoryListResponse>(apiResponse);
-                categoriesList = categoryListResponse.CategoryList;
+                categoryListResponse = JsonConvert.DeserializeObject<SharedListResponse<Category>>(apiResponse);
+                categoriesList = categoryListResponse.List;
                 totalRecords = categoryListResponse.TotalRecords;
             }
 
@@ -108,15 +108,15 @@ namespace PMS_MVC.Controllers
             {
                 if (type)
                 {
-                    Category addCategory = new Category();
-                    addCategory.Id = 0;
-                    return View("add", addCategory);
+                    Category category = new Category();
+                    category.Id = 0;
+                    return View("add", category);
                 }
                 else
                 {
                     string token = HttpContext.Session.GetString("jwtToken") ?? "";
                     int? userId = HttpContext.Session.GetInt32("userId");
-                    HttpResponseMessage response = null;
+                    HttpResponseMessage response = new HttpResponseMessage();
                     if (!string.IsNullOrEmpty(token))
                     {
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -159,7 +159,7 @@ namespace PMS_MVC.Controllers
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -172,20 +172,35 @@ namespace PMS_MVC.Controllers
 
                 response = await client.PostAsync(client.BaseAddress + APIUrls.createCategory, content);
 
-                if (response.IsSuccessStatusCode)
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
+                //    return RedirectToAction("list");
+                //}
+                //else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                //{
+                //    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
+                //    return View("add", category);
+                //}
+                //else
+                //{
+                //    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
+                //    return View("add", category);
+                //}
+
+                switch (response.StatusCode)
                 {
-                    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
-                    return RedirectToAction("list");
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
-                    return View("add", category);
-                }
-                else
-                {
-                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
-                    return View("add", category);
+                    case System.Net.HttpStatusCode.OK:
+                        TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
+                        return RedirectToAction("list");
+
+                    case System.Net.HttpStatusCode.BadRequest:
+                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
+                        return View("add", category);
+
+                    default:
+                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
+                        return View("add", category);
                 }
             }
         }
@@ -204,7 +219,7 @@ namespace PMS_MVC.Controllers
                 string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 category.UserId = HttpContext.Session.GetInt32("userId");
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response = new HttpResponseMessage();
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -250,7 +265,7 @@ namespace PMS_MVC.Controllers
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
             int? userId = HttpContext.Session.GetInt32("userId");
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -284,7 +299,7 @@ namespace PMS_MVC.Controllers
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

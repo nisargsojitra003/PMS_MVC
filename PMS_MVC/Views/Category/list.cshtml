@@ -51,23 +51,13 @@
     });
 
     $(document).on('click', '#categoryListClear', function () {
-        $('#searchCategoryTab').val('');
-        $('#searchCategoryCodeTab').val('');
-        $('#searchCategoryDescription').val('');
+        $('#searchCategoryTab, #searchCategoryCodeTab, #searchCategoryDescription').val('');
         $('#categoryListdata').load("/category/listshared");
     });
+
 </script>
 
-<style>
-    .button-container {
-        display: inline-block;
-    }
 
-    .inline-button {
-        display: inline-block;
-        margin-right: 5px; /* Adjust spacing as needed */
-    }
-</style>
 <script>
     function validateNumberInput(input) {
         input.value = input.value.replace(/\D/g, '');

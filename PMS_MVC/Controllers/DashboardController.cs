@@ -111,14 +111,14 @@ namespace PMS_MVC.Controllers
             }
             
             response = await client.GetAsync(client.BaseAddress + APIUrls.getAllActivity + queryString);
-            
-            ActivityListResponse activityListResponse = new ActivityListResponse();
+
+            SharedListResponse<UserActivity> activityListResponse = new SharedListResponse<UserActivity>();
             
             if (response.IsSuccessStatusCode)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                activityListResponse = JsonConvert.DeserializeObject<ActivityListResponse>(apiResponse);
-                activityList = activityListResponse.ActivityList;
+                activityListResponse = JsonConvert.DeserializeObject<SharedListResponse<UserActivity>>(apiResponse);
+                activityList = activityListResponse.List;
                 totalRecords = activityListResponse.TotalRecords;
             }
             
