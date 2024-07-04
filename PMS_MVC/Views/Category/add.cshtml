@@ -11,7 +11,7 @@
     }
     else
     {
-        formName = "Edit";
+        formName = "save";
         titleName = "Edit Category";
         ViewData["Title"] = "Edit Category";
     }
@@ -38,7 +38,7 @@
                 <div class="col-12">
                     <div class="form-floating">
                         <input asp-for="@Model.Code" type="text" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control" placeholder="Category Code" oninput="validateCodeInput(this)">
-                        <label asp-for="@Model.Code">Category Code</label>
+                        <label asp-for="@Model.Code">Code</label>
                         <span asp-validation-for="@Model.Code" class="text-danger"></span>
                     </div>
                 </div>

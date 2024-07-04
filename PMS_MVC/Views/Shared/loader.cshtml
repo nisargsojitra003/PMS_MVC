@@ -1,8 +1,11 @@
-﻿
-<link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
-<div id="loader" style="display: none; opacity:0.7">
+﻿@* <link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
+<div id="loader" style="display: none;">
     <div class="spinner loading"></div>
+</div> *@
+
+<link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
+<div id="overlay" style="display: none;">
+    <div id="loader">
+        <div class="spinner loading"></div>
+    </div>
 </div>
-<!-- Add this in your view (e.g., in a shared layout or specific view) -->
-
-

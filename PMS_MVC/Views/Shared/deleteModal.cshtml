@@ -1,0 +1,53 @@
+﻿
+<div class="modal fade" id="delModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="MainLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form method="post">
+                    <!-- <p class="hidden" id="modalValue"></p>-->
+                    <input type="hidden" id="modalValue" name="id" />
+                    <p id="confirmLabel"></p>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" id="DeleteButton" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-success ms-2" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // $(document).on("click", ".DeleteProductForm", function () {
+    //     var id = $('#modalValue').val();
+    //     console.log(id);
+    //     $.ajax({
+    //         url: '/Product/Delete',
+    //         data: { id: id },
+    //         beforeSend: function () {
+    //             console.log("display");
+    //             DisplayLoader();
+    //         },
+    //         success: function (response) {
+    //             DisplayLoader();
+    //             if (response.success) {
+    //                 toastr.success('Product has been deleted successfully!');
+    //                 HideLoader();
+    //                 $('#delProductModal').modal('toggle');
+    //                 $('#productListdata').load("/product/ProductShared");
+    //             }
+    //             else {
+    //                 toastr.error("Something went Wrong!");
+    //                 HideLoader();
+    //                 $('#delCategoryModal').modal('toggle');
+    //                 $('#productListdata').load("/product/ProductShared");
+    //             }
+    //         }
+    //     });
+    // });
+</script>

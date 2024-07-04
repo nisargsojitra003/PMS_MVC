@@ -78,7 +78,7 @@
                                         </button>
                                     </div>
                                     <div class="ms-1">
-                                        <button onclick="handleDeleteCategoryClick()" data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1">
+                                        <button  data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -92,6 +92,7 @@
         </table>
     </div>
 </div>
+<div id="DeleteCategoryModal"></div>
 <!-- Pagination -->
 @if (ViewBag.TotalPages > 0 && Model.Count() > 0)
 {

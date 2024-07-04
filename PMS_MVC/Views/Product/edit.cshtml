@@ -12,7 +12,7 @@
     <div class="shadow-lg rounded bg-white p-4 w-100" style="max-width: 600px;">
 
         <div class="editformTitle mt-3"><p><strong>Edit Product</strong></p></div>
-        <form asp-action="Edit" asp-controller="Product" asp-route-ProductId="@Model.ProductId" method="post" class="dark-mode2" id="editProductForm" enctype="multipart/form-data">
+        <form asp-action="Add" asp-controller="Product" asp-route-ProductId="@Model.ProductId" method="post" class="dark-mode2" id="editProductForm" enctype="multipart/form-data">
             <input type="hidden"  asp-for="@Model.ProductId"/>
             <div class="row mb-3">
                 <div class="col-12">

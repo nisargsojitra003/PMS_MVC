@@ -24,7 +24,7 @@
         public string createProductCategory = "product/getaddcategorylist?id=";
         public string createProduct = "product/create";
         public string getProduct = "product/get/";
-        public string editProduct = "product/update/";
+        public string editProduct = "product/create/";
         public string deleteProduct = "product/delete/";
         public string deleteImage = "product/deleteimage/";
     }

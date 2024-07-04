@@ -5,6 +5,7 @@ namespace PMS_MVC.Models
     public class AddProduct
     {
         public List<Category> categories { get; set; }
+        public List<CategoryList> CategoryLists { get; set; }
         public List<AddProduct> addProducts { get; set; }
         public int ProductId { get; set; }
         public int? userId { get; set; }

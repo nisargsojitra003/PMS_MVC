@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using PMS_MVC.Models;
 using System.Collections.Specialized;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
@@ -124,20 +125,19 @@ namespace PMS_MVC.Controllers
 
                     response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
                     Category addCategory = new Category();
-                    if (response.IsSuccessStatusCode)
+                    switch (response.StatusCode)
                     {
-                        string data = await response.Content.ReadAsStringAsync();
-                        addCategory = JsonConvert.DeserializeObject<Category>(data);
+                        case HttpStatusCode.OK:
+                            string data = await response.Content.ReadAsStringAsync();
+                            addCategory = JsonConvert.DeserializeObject<Category>(data);
+                            return View("add",addCategory);
+
+                        case HttpStatusCode.NotFound:
+                            return View("invalid");
+
+                        default:
+                            return View("error");
                     }
-                    else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        return View("invalid");
-                    }
-                    else
-                    {
-                        return StatusCode((int)response.StatusCode, "Error retrieving category data.");
-                    }
-                    return View("add", addCategory);
                 }
             }
             catch
@@ -169,32 +169,17 @@ namespace PMS_MVC.Controllers
                 content.Add(new StringContent(category.Code), nameof(category.Code));
                 content.Add(new StringContent(category.Description), nameof(category.Description));
                 content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
+                content.Add(new StringContent(category.Id.ToString()), nameof(category.Id));
 
                 response = await client.PostAsync(client.BaseAddress + APIUrls.createCategory, content);
 
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
-                //    return RedirectToAction("list");
-                //}
-                //else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                //{
-                //    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
-                //    return View("add", category);
-                //}
-                //else
-                //{
-                //    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
-                //    return View("add", category);
-                //}
-
                 switch (response.StatusCode)
                 {
-                    case System.Net.HttpStatusCode.OK:
+                    case HttpStatusCode.OK:
                         TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
                         return RedirectToAction("list");
 
-                    case System.Net.HttpStatusCode.BadRequest:
+                    case HttpStatusCode.BadRequest:
                         TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
                         return View("add", category);
 
@@ -204,54 +189,8 @@ namespace PMS_MVC.Controllers
                 }
             }
         }
-
-        /// <summary>
-        /// Edit post method
-        /// </summary>
-        /// <param name="category">custom model of category</param>
-        /// <param name="id">category id</param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult> Edit(Category category, int id)
-        {
-            using (MultipartFormDataContent content = new MultipartFormDataContent())
-            {
-                string token = HttpContext.Session.GetString("jwtToken") ?? "";
-                category.UserId = HttpContext.Session.GetInt32("userId");
-
-                HttpResponseMessage response = new HttpResponseMessage();
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                }
-
-                content.Add(new StringContent(category.Id.ToString()), nameof(category.Id));
-                content.Add(new StringContent(category.Name), nameof(category.Name));
-                content.Add(new StringContent(category.Code), nameof(category.Code));
-                content.Add(new StringContent(category.Description), nameof(category.Description));
-                content.Add(new StringContent(category.UserId.ToString()), nameof(category.UserId));
-
-                response = await client.PutAsync(client.BaseAddress + APIUrls.editCategory + id, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Category");
-                    return RedirectToAction("list");
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.categoryWarningToaster;
-                    return View("add", category);
-                }
-                else
-                {
-                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
-                    return View("add", category);
-                }
-            }
-        }
         #endregion
+
 
         #region CategoryDetail
         /// <summary>
@@ -276,17 +215,21 @@ namespace PMS_MVC.Controllers
 
             Category addCategory = new Category();
 
-            if (response.IsSuccessStatusCode)
+            switch (response.StatusCode)
             {
-                string data = await response.Content.ReadAsStringAsync();
-                addCategory = JsonConvert.DeserializeObject<Category>(data);
+                case HttpStatusCode.OK:
+                    string data = await response.Content.ReadAsStringAsync();
+                    addCategory = JsonConvert.DeserializeObject<Category>(data);
+                    return View(addCategory);
+
+                case HttpStatusCode.NotFound:
+                    return View("invalid");
+
+                default:
+                    return View("error");
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return View("invalid");
-            }
-            return View(addCategory);
         }
+
         #endregion
 
         #region DeleteProduct
@@ -309,19 +252,19 @@ namespace PMS_MVC.Controllers
             StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
             response = await client.PostAsync(client.BaseAddress + APIUrls.deleteCategory + id, content);
-            if (response.IsSuccessStatusCode)
+            switch (response.StatusCode)
             {
-                ChangePage(1);
-                return Json(new { success = true });
+                case HttpStatusCode.OK:
+                    ChangePage(1);
+                    return Json(new { success = true });
+
+                case HttpStatusCode.BadRequest:
+                    return Json(new { success = false });
+
+                default:
+                    return Json(new { success = false });
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                return Json(new { success = false });
-            }
-            else
-            {
-                return Json(new { success = false });
-            }
+
         }
         #endregion
 

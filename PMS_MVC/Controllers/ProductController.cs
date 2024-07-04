@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using PMS_MVC.Models;
 using System.Collections.Specialized;
+using System.Diagnostics.Eventing.Reader;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
@@ -144,10 +146,11 @@ namespace PMS_MVC.Controllers
         /// <param name="addProduct"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> Add([FromForm] AddProduct addProduct)
+        public async Task<ActionResult> Add([FromForm] AddProduct addProduct, string TagRadios)
         {
             try
             {
+
                 using (MultipartFormDataContent content = new MultipartFormDataContent())
                 {
                     addProduct.userId = HttpContext.Session.GetInt32("userId");
@@ -155,9 +158,17 @@ namespace PMS_MVC.Controllers
                     content.Add(new StringContent(addProduct.ProductName), nameof(addProduct.ProductName));
                     content.Add(new StringContent(addProduct.Description), nameof(addProduct.Description));
                     content.Add(new StringContent(addProduct.Price.ToString()), nameof(addProduct.Price));
-                    content.Add(new StringContent(addProduct.CategoryTag), nameof(addProduct.CategoryTag));
+                    if (addProduct.ProductId == 0)
+                    {
+                        content.Add(new StringContent(addProduct.CategoryTag), nameof(addProduct.CategoryTag));
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(TagRadios ?? ""), nameof(addProduct.CategoryTag));
+                    }
                     content.Add(new StringContent(addProduct.CategoryId.ToString()), nameof(addProduct.CategoryId));
                     content.Add(new StringContent(addProduct.userId.ToString()), nameof(addProduct.userId));
+                    content.Add(new StringContent(addProduct.ProductId.ToString()), nameof(addProduct.ProductId));
 
                     if (addProduct.Fileupload != null)
                     {
@@ -173,48 +184,107 @@ namespace PMS_MVC.Controllers
                         content.Add(fileContent);
                     }
 
-                    string token = HttpContext.Session.GetString("jwtToken") ?? "";
-
-                    HttpResponseMessage response = new HttpResponseMessage();
-
-                    if (!string.IsNullOrEmpty(token))
+                    if (addProduct.ProductId == 0)
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    }
+                        string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
-                    response = await client.PostAsync(client.BaseAddress + APIUrls.createProduct, content);
+                        HttpResponseMessage response = new HttpResponseMessage();
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product"); ;
-                        return RedirectToAction("list");
-                    }
-                    else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                    {
-                        string token1 = HttpContext.Session.GetString("jwtToken") ?? "";
-
-                        HttpResponseMessage response1 = new HttpResponseMessage();
-                        if (!string.IsNullOrEmpty(token1))
+                        if (!string.IsNullOrEmpty(token))
                         {
-                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token1);
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                         }
-                        int? id = HttpContext.Session.GetInt32("userId");
-                        response1 = client.GetAsync(client.BaseAddress + APIUrls.createProductCategory + id).Result;
 
-                        if (response1.IsSuccessStatusCode)
+                        response = await client.PostAsync(client.BaseAddress + APIUrls.createProduct, content);
+
+                        switch (response.StatusCode)
                         {
-                            string data = await response1.Content.ReadAsStringAsync();
-                            addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
+                            case HttpStatusCode.OK:
+                                TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product");
+                                return RedirectToAction("list");
+
+                            case HttpStatusCode.BadRequest:
+                                {
+                                    string token1 = HttpContext.Session.GetString("jwtToken") ?? "";
+                                    int? id = HttpContext.Session.GetInt32("userId");
+
+                                    if (!string.IsNullOrEmpty(token1))
+                                    {
+                                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token1);
+                                    }
+
+                                    HttpResponseMessage response1 = await client.GetAsync(client.BaseAddress + APIUrls.createProductCategory + id);
+
+                                    if (response1.IsSuccessStatusCode)
+                                    {
+                                        string data = await response1.Content.ReadAsStringAsync();
+                                        addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
+                                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productWarningToaster;
+                                        return View("add", addProduct);
+                                    }
+                                    else
+                                    {
+                                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
+                                        return RedirectToAction("list");
+                                    }
+                                }
+
+                            default:
+                                TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
+                                return RedirectToAction("list");
                         }
-                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productWarningToaster;
-                        return View("add", addProduct);
+
                     }
+
                     else
                     {
-                        TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
-                        return RedirectToAction("list");
-                    }
+                        string token = HttpContext.Session.GetString("jwtToken") ?? "";
+                        HttpResponseMessage response = new HttpResponseMessage();
 
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        response = await client.PostAsync(client.BaseAddress + APIUrls.createProduct, content);
+
+                        switch (response.StatusCode)
+                        {
+                            case HttpStatusCode.OK:
+                                TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.savedSuccessToaster.Replace("{1}", "Product");
+                                return RedirectToAction("list");
+
+                            case HttpStatusCode.BadRequest:
+                                {
+                                    TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.productWarningToaster;
+                                    int? userId = HttpContext.Session.GetInt32("userId");
+
+                                    // Retrieve product details again to show in the edit form
+                                    HttpResponseMessage getProductResponse = await client.GetAsync(client.BaseAddress + APIUrls.getProduct + addProduct.ProductId + APIUrls.userId + userId);
+
+                                    if (getProductResponse.IsSuccessStatusCode)
+                                    {
+                                        string data = await getProductResponse.Content.ReadAsStringAsync();
+                                        addProduct = JsonConvert.DeserializeObject<AddProduct>(data);
+
+                                        if (addProduct == null)
+                                        {
+                                            return StatusCode(500, "Error deserializing product data.");
+                                        }
+
+                                        return View(addProduct);
+                                    }
+                                    else
+                                    {
+                                        return StatusCode((int)getProductResponse.StatusCode, "Error retrieving product data.");
+                                    }
+                                }
+
+                            default:
+                                return StatusCode((int)response.StatusCode, "Failed to update product.");
+                        }
+
+                    }
                 }
 
             }

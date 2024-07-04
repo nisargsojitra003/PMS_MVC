@@ -2,19 +2,103 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-function handleDeleteProductClick() {
-    $(document).on('click', '.deleteProduct', function () {
-        $("#delProductModal").modal("show");
-        $("#ProductIdVal").val($(this).closest('.tr').data('rid'));
-    });
-}
 
-function handleDeleteCategoryClick() {
-    $(document).on('click', '.deleteCategory', function () {
-        $("#delCategoryModal").modal("show");
-        $("#CategoryIdVal").val($(this).closest('.tr').data('rid'));
+//function handleDeleteProductClick() {
+//    var id = undefined;
+
+    $(document).on('click', '.deleteProduct', function () {
+        $('#DeleteProductModel').load("/dashboard/LoadModal");
+        $("#delModal").modal("show");
+        //$("#modalValue").val($(this).closest('.tr').data('rid'));
+        id = $(this).closest('.tr').data('rid');
+        $("#MainLabel").html("Delete Product?");
+        $("#confirmLabel").html("<strong>Are you sure to want to delete this Product?</strong>");
+        $("#DeleteButton").addClass("DeleteProductForm");
     });
-}
+
+    $(document).on("click", ".DeleteProductForm", function () {
+        //var id = $("#modalValue").html();
+        //console.log(id);
+        $.ajax({
+            url: '/Product/Delete',
+            data: { id: id },
+            beforeSend: function ()
+            {
+                console.log("display");
+                DisplayLoader();
+            },
+            success: function (response)
+            {
+                DisplayLoader();
+                if (response.success)
+                {
+                    window.alert("arrive");
+                    toastr.success('Product has been deleted successfully!');
+                    HideLoader();
+                    $('#delModal').modal("toggle");
+                    $('#productListdata').load("/product/ProductShared");
+                }
+                else
+                {
+                    toastr.error("Something went Wrong!");
+                    HideLoader();
+                    $('#delModal').modal("toggle");
+                    $('#productListdata').load("/product/ProductShared");
+                }
+            }
+        });
+    });
+
+    $('#delModal').on('hidden.bs.modal', function () {
+        $('#DeleteProductModel').empty();
+        id = undefined;
+        $("#MainLabel").empty();
+        $("#confirmLabel").empty();
+        $("#DeleteButton").removeClass("DeleteProductForm");
+    });
+//}
+
+//function handleDeleteCategoryClick() {
+//    var id = undefined;
+    $(document).on('click', '.deleteCategory', function () {
+        $('#DeleteCategoryModal').load("/dashboard/LoadModal");
+        //$("#modalValue").html($(this).closest('.tr').data('rid'));
+        id = $(this).closest('.tr').data('rid');
+        $("#modalValue").val(id);
+        console.log($("#modalValue").val());
+        $("#MainLabel").html("Delete Category?");
+        $("#confirmLabel").html("<strong>Are you sure you want to delete this Category?</strong>");
+        $("#DeleteButton").addClass("DeleteCategoryForm");
+        $("#delModal").modal("show"); // Corrected modal opening
+    });
+
+
+    $(document).on("click", ".DeleteCategoryForm", function () {
+
+        $.ajax({
+            url: '/Category/Delete',
+            data: { id: id },
+            beforeSend: function () {
+                console.log("Display Loader");
+                DisplayLoader();
+            },
+            success: function (response) {
+                HideLoader();
+                if (response.success) {
+                    toastr.success('Category has been deleted successfully!');
+                    HideLoader();
+                    $('#delModal').modal("toggle");
+                    $('#categoryListdata').load("/Category/listshared");
+                } else {
+                    toastr.error("Selected Category have already products so you can't delete this category!");
+                    HideLoader();
+                    $('#delModal').modal("toggle");
+                    $('#categoryListdata').load("/Category/listshared");
+                }
+            }
+        });
+    });
+//}
 
 function validateForm() {
     var fileInput = document.getElementById("myFile");
@@ -401,15 +485,14 @@ function DeleteProductByValue() {
 }
 
 function DisplayLoader() {
-    $("#loader").show();
+    $("#overlay").show();
 }
 
 function HideLoader() {
     setTimeout(function () {
-        $("#loader").hide();
-    }, 2000); 
+        $("#overlay").hide();
+    }, 2000);
 }
-
 
 $(window).on("beforeunload", function () {
     DisplayLoader();
@@ -422,3 +505,34 @@ $(document).on("submit", "form", function () {
 $(document).ready(function () {
     HideLoader();
 });
+
+
+
+//$(document).on("click", ".DeleteProductForm", function () {
+//    //var id = $('#modalValue').val();
+//    var id = document.getElementById("modalValue").value;
+//    console.log(id);
+//    $.ajax({
+//        url: '/Product/Delete',
+//        data: { id: id },
+//        beforeSend: function () {
+//            console.log("display");
+//            DisplayLoader();
+//        },
+//        success: function (response) {
+//            DisplayLoader();
+//            if (response.success) {
+//                toastr.success('Product has been deleted successfully!');
+//                HideLoader();
+//                $('#delProductModal').modal('toggle');
+//                $('#productListdata').load("/product/ProductShared");
+//            }
+//            else {
+//                toastr.error("Something went Wrong!");
+//                HideLoader();
+//                $('#delCategoryModal').modal('toggle');
+//                $('#productListdata').load("/product/ProductShared");
+//            }
+//        }
+//    });
+//});

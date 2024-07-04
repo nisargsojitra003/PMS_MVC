@@ -84,7 +84,7 @@
                                     <i class="bi bi-list"></i>
                                 </button>
                                 <!-- Delete Button -->
-                                <button onclick="handleDeleteProductClick()" data-toggle="tooltip" data-placement="top" title="Delete" type="submit" class="deleteProduct btn btn-danger btn-sm mb-1 d-inline-block me-1" id="deleteBtn">
+                                <button data-toggle="tooltip" data-placement="top" title="Delete" type="submit" class="deleteProduct btn btn-danger btn-sm mb-1 d-inline-block me-1" id="deleteBtn">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -95,6 +95,7 @@
         </table>
     </div>
 </div>
+<div id="DeleteProductModel"></div>
 @if (ViewBag.TotalPages > 0 && Model.Count() > 0)
 {
     <div class="d-flex justify-content-between align-items-center mt-3">

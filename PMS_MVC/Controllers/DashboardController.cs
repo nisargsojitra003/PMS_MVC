@@ -169,6 +169,11 @@ namespace PMS_MVC.Controllers
             return Json(new { success = true });
         }
 
+        public IActionResult LoadModal()
+        {
+            return PartialView("deleteModal");
+        }
+
         public JsonResult ChangeActivityPageSize(int activityPageSize)
         {
             if (activityPageSize != 0)
