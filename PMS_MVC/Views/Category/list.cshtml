@@ -34,7 +34,7 @@
             <button data-toggle="tooltip" data-placement="top" id="categoryListClear" title="Clear Search" class="btn btn-outline-danger">
                 <i class="bi bi-backspace"></i>
             </button>
-            <button data-toggle="tooltip" data-placement="top" title="Add" onclick="location.href='@Url.Action("save", "category", new { type = true })'" class="btn btn-success">
+            <button data-toggle="tooltip" data-placement="top" title="Add" onclick="location.href='@Url.Action("get", "category", new { type = true })'" class="btn btn-success">
                 <i class="bi bi-plus"></i>
             </button>
         </div>
@@ -46,13 +46,13 @@
 
 <script>
     $(document).ready(function () {
-        $('#categoryListdata').load("/category/listshared");
+        $('#categoryListdata').load("/category/CategoryListshared");
         $('[data-toggle="tooltip"]').tooltip();
     });
 
     $(document).on('click', '#categoryListClear', function () {
         $('#searchCategoryTab, #searchCategoryCodeTab, #searchCategoryDescription').val('');
-        $('#categoryListdata').load("/category/listshared");
+        $('#categoryListdata').load("/category/CategoryListshared");
     });
 
 </script>

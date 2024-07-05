@@ -68,13 +68,13 @@
 
 <script>
     $(document).ready(function () {
-        $('#productListdata').load("/product/productShared");
+        $('#productListdata').load("/product/ProductListshared");
         $('[data-toggle="tooltip"]').tooltip();
     });
 
     $(document).on('click', '#categoryProductClear', function () {
         $('#searchProduct,#searchCategoryTag,#searchDescription').val('');
         $('#searchCategory').val(0);
-        $('#productListdata').load("/product/productShared");
+        $('#productListdata').load("/product/ProductListshared");
     });
 </script>

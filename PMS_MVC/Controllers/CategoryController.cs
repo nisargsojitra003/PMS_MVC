@@ -45,7 +45,7 @@ namespace PMS_MVC.Controllers
         /// </summary>
         /// <param name="searchFilter"></param>
         /// <returns></returns>
-        public async Task<ActionResult<Category>> listshared(SearchFilter searchFilter)
+        public async Task<ActionResult<Category>> CategoryListshared(SearchFilter searchFilter)
         {
             searchFilter.categoryPageNumber = HttpContext.Session.GetString("catPageNumber") ?? "1";
             searchFilter.categoryPageSize = HttpContext.Session.GetString("catPageSize") ?? "5";
@@ -103,7 +103,7 @@ namespace PMS_MVC.Controllers
         /// <param name="type">it's either create or edit</param>
         /// <returns>return view</returns>
         [HttpGet]
-        public async Task<IActionResult> Save(int id, bool type)
+        public async Task<IActionResult> Get(int id, bool type)
         {
             try
             {
@@ -147,7 +147,7 @@ namespace PMS_MVC.Controllers
         }
 
         /// <summary>
-        /// Post method for save category
+        /// Post method for save category (combined httppost method of add and edit)
         /// </summary>
         /// <param name="category">custom model of category</param>
         /// <returns></returns>

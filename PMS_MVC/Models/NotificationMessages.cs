@@ -13,8 +13,8 @@
         //Category Controller common notification string
         public string categoryWarningToaster = "Category name or code is already Exist!";
         //product controller common notification string
-        public string productWarningToaster = "Product name or category is already Exist!";
-        public string productErrorToaster = "Error deleting product!";
+        public string productWarningToaster = "Product is already exist in selected category!";
+        public string productErrorToaster = "Error occurred while deleting product!";
         //Login controller common notification string
         //Create account common notification string
         public string accountCreatedSuccessToaster = "Account has been created successfully!";

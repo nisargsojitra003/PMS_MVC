@@ -68,7 +68,7 @@
                             {
                                 <div class="btn-group ms-1 d-flex" role="group">
                                     <div class="ms-1">
-                                        <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="location.href='@Url.Action("save", "category", new { Id = @category.Id })'" class="btn btn-warning btn-sm me-1">
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="location.href='@Url.Action("get", "category", new { Id = @category.Id })'" class="btn btn-warning btn-sm me-1">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                     </div>
@@ -78,9 +78,11 @@
                                         </button>
                                     </div>
                                     <div class="ms-1">
-                                        <button  data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1">
+                                        @* <button  data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1">
                                             <i class="bi bi-trash"></i>
-                                        </button>
+                                        </button> *@
+                                        <button class="deleteEntity btn btn-danger btn-sm me-1" id="deleteEntity" data-entity-type="Category" data-rid="2"><i class="bi bi-trash"></i></button>
+
                                     </div>
                                 </div>
                             }
