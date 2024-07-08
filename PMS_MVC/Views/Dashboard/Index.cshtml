@@ -11,7 +11,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Categories</h5>
                     <p class="card-text">Manage total <strong><span class="text-danger">@Model.totalCategories</span></strong> categories.</p>
-                    <a asp-controller="category" asp-action="list" class="btn btn-success text-white">Go to Categories</a>
+                    @* <a asp-controller="category" asp-action="list" class="btn btn-success text-white">Go to Categories</a>                     *@
+                    <button type="button" onclick="OpenCategoryList()" class="btn btn-success text-white">Go to Categories</button>
                 </div>
             </div>
         </div>
@@ -21,23 +22,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Products</h5>
                     <p class="card-text">Manage total <strong><span class="text-danger">@Model.totalProducts</span></strong> products.</p>
-                    <a asp-controller="product" asp-action="list" class="btn btn-danger text-white">Go to Products</a>
+                    @* <a asp-controller="product" asp-action="list" class="btn btn-danger text-white">Go to Products</a> *@
+                    <button type="button" onclick="OpenProductList()" class="btn btn-danger text-white">Go to Products</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-<style>
-    .hover {
-        transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-        .hover:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-</style>

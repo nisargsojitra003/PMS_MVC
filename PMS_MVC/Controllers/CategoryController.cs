@@ -107,6 +107,12 @@ namespace PMS_MVC.Controllers
         {
             try
             {
+                string token = HttpContext.Session.GetString("jwtToken") ?? "";
+                if (string.IsNullOrEmpty(token))
+                {
+                    return RedirectToAction("login","login");
+                }
+
                 if (type)
                 {
                     Category category = new Category();
@@ -115,7 +121,6 @@ namespace PMS_MVC.Controllers
                 }
                 else
                 {
-                    string token = HttpContext.Session.GetString("jwtToken") ?? "";
                     int? userId = HttpContext.Session.GetInt32("userId");
                     HttpResponseMessage response = new HttpResponseMessage();
                     if (!string.IsNullOrEmpty(token))
@@ -130,7 +135,7 @@ namespace PMS_MVC.Controllers
                         case HttpStatusCode.OK:
                             string data = await response.Content.ReadAsStringAsync();
                             addCategory = JsonConvert.DeserializeObject<Category>(data);
-                            return View("add",addCategory);
+                            return View("add", addCategory);
 
                         case HttpStatusCode.NotFound:
                             return View("invalid");
@@ -202,6 +207,10 @@ namespace PMS_MVC.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("login", "login");
+            }
             int? userId = HttpContext.Session.GetInt32("userId");
 
             HttpResponseMessage response = new HttpResponseMessage();
@@ -264,7 +273,6 @@ namespace PMS_MVC.Controllers
                 default:
                     return Json(new { success = false });
             }
-
         }
         #endregion
 

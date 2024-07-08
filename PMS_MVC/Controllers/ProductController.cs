@@ -116,8 +116,12 @@ namespace PMS_MVC.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Add()
         {
-            AddProduct addProduct = new AddProduct();
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("login", "login");
+            }
+            AddProduct addProduct = new AddProduct();
 
             HttpResponseMessage response = new HttpResponseMessage();
             if (!string.IsNullOrEmpty(token))
@@ -302,13 +306,17 @@ namespace PMS_MVC.Controllers
         /// <param name="id"></param>
         /// <returns>edit product's info.</returns>
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Get(int id)
         {
             EditProduct editProduct = new EditProduct();
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("login", "login");
+            }
 
             try
             {
-                string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 editProduct.userId = HttpContext.Session.GetInt32("userId");
                 int? userId = HttpContext.Session.GetInt32("userId");
 
@@ -353,7 +361,7 @@ namespace PMS_MVC.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
 
-            return View(editProduct);
+            return View("edit",editProduct);
         }
 
         /// <summary>
@@ -450,11 +458,14 @@ namespace PMS_MVC.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             EditProduct editProduct = new EditProduct();
-
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("login", "login");
+            }
             try
             {
                 // Get product details
-                string token = HttpContext.Session.GetString("jwtToken") ?? "";
                 int? userId = HttpContext.Session.GetInt32("userId");
                 HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(token))

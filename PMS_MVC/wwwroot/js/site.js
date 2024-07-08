@@ -31,7 +31,7 @@ $(document).on("click", ".deleteForm", function () {
             if (response.success) {
                 toastr.success(`${entityType} has been deleted successfully!`);
             } else {
-                toastr.error(`Something went wrong while deleting the ${entityType}!`);
+                toastr.error(`Selected ${entityType} have already products so you can't delete this ${entityType}!`);
             }
             $("#delModal .btn-close").click();
             $(`#${entityType.toLowerCase()}Listdata`).load(`/${entityType}/${entityType}Listshared`);                
@@ -74,7 +74,6 @@ function searchCategory() {
         beforeSend: function () {
             console.log("display");
             DisplayLoader();
-            debugger;
         },
         success: function (result) {
             console.log("complete");
@@ -275,6 +274,47 @@ function ActivityFilter(sortTypeActivity) {
     });
 }
 
+function OpenCategoryList() {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/category/list";
+    }, 1000);
+}   
+
+function OpenProductList() {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/product/list";
+    }, 1000);
+}
+
+function GetCategoryById(id) {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/category/get/" + id;
+    }, 1000);
+}
+
+function GetCategoryDetailById(id) {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/category/detail/" + id;
+    }, 1000);
+}
+
+function GetProductById(id) {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/product/get/" + id;
+    }, 1000);
+}
+
+function GetProductDetailById(id) {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/product/detail/" + id;
+    }, 1000);
+}
 
 function searchCategory() {
 
@@ -384,7 +424,6 @@ function DeleteCategoryByValue() {
         beforeSend: function () {
             console.log("display");
             DisplayLoader();
-            debugger;
         },
         success: function (response) {
             if (response.success) {
@@ -409,7 +448,6 @@ function DeleteProductByValue() {
         beforeSend: function () {
             console.log("display");
             DisplayLoader();
-            debugger;
         },
         success: function (response) {
             DisplayLoader();

@@ -95,7 +95,15 @@ namespace PMS_MVC.Controllers
         /// <returns></returns>
         public IActionResult CreateAccount()
         {
-            return View();
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            if (!string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("index", "dashboard");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         /// <summary>

@@ -53,3 +53,12 @@ body {
     display: inline-block;
     margin-right: 5px; /* Adjust spacing as needed */
 }
+
+.hover {
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+    .hover:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }

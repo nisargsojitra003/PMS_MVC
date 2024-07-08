@@ -68,25 +68,24 @@
                             {
                                 <div class="btn-group ms-1 d-flex" role="group">
                                     <div class="ms-1">
-                                        <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="location.href='@Url.Action("get", "category", new { Id = @category.Id })'" class="btn btn-warning btn-sm me-1">
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="GetCategoryById(@category.Id)" class="btn btn-warning btn-sm me-1">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
+                                        @* onclick="location.href='@Url.Action("get", "category", new { Id = @category.Id })'" *@
                                     </div>
                                     <div class="ms-1">
-                                        <button data-toggle="tooltip" data-placement="top" title="View" onclick="location.href='@Url.Action("detail", "category", new { Id = @category.Id })'" type="button" class="btn btn-info btn-sm me-1">
+                                        <button data-toggle="tooltip" data-placement="top" title="View" onclick="GetCategoryDetailById(@category.Id)" type="button" class="btn btn-info btn-sm me-1">
                                             <i class="bi bi-list"></i>
                                         </button>
+                                        @* location.href='@Url.Action("detail", "category", new { Id = @category.Id })' *@
                                     </div>
                                     <div class="ms-1">
-                                        @* <button  data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1">
-                                            <i class="bi bi-trash"></i>
-                                        </button> *@
-                                        <button class="deleteEntity btn btn-danger btn-sm me-1" id="deleteEntity" data-entity-type="Category" data-rid="2"><i class="bi bi-trash"></i></button>
+                                        @* <button  data-toggle="tooltip" data-placement="top" title="Delete" class="deleteCategory btn btn-danger btn-sm me-1"><i class="bi bi-trash"></i></button> *@
+                                        <button class="btn btn-danger btn-sm me-1" id="deleteEntity" data-entity-type="Category"><i class="bi bi-trash"></i></button>
 
                                     </div>
                                 </div>
                             }
-
                         </td>
                     </tr>
                 }
