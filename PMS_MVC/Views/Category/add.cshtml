@@ -1,17 +1,14 @@
 ﻿@model PMS_MVC.Models.Category;
 <partial name="_Notification" />
 @{
-    string formName = "";
     string titleName = "";
     if (Model.Id == 0)
     {
-        formName = "save";
         titleName = "Add Category";
         ViewData["Title"] = "Add Category";
     }
     else
     {
-        formName = "save";
         titleName = "Edit Category";
         ViewData["Title"] = "Edit Category";
     }
@@ -23,7 +20,7 @@
 
 
         <div class="formTitle mt-3" id="formTile"><h5>@titleName</h5></div>
-        <form asp-action="@formName" asp-controller="Category" method="post" class="dark-mode2" id="addCategoryForm">
+        <form asp-action="Save" asp-controller="Category" method="post" class="dark-mode2" id="addCategoryForm">
             <div class="row mb-3">
                 <div class="col-12">
                     <input type="hidden" asp-for="@Model.Id" />
@@ -57,7 +54,6 @@
                     <button onclick="location.href='@Url.Action("list", "category")'" type="button" class="btn btn-outline-info w-100" data-bs-dismiss="modal">Cancel</button>
                 </div>
                 <div class="col-6">
-                    @* @Html.AntiForgeryToken() *@
                     <button type="submit" value="Save" class="btn btn-success text-white w-100">Save</button>
                 </div>
             </div>

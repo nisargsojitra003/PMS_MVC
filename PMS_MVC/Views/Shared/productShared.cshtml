@@ -78,15 +78,11 @@
                                 <button data-toggle="tooltip" data-placement="top" title="Edit" onclick="GetProductById(@product.ProductId)" class="btn btn-warning btn-sm mb-1  d-inline-block me-1" id="editBtn">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                @* location.href='@Url.Action("get", "product", new {Id = @product.ProductId })' *@
                                 <!-- List Button -->
                                 <button title="View" data-toggle="tooltip" data-placement="top" onclick="GetProductDetailById(@product.ProductId)" type="button" class="btn btn-info btn-sm mb-1  d-inline-block me-1" id="listBtn">
                                     <i class="bi bi-list"></i>
                                 </button>
-                                @* location.href='@Url.Action("detail", "product", new { Id = @product.ProductId })' *@
-
                                 <!-- Delete Button -->
-                                @* <button data-toggle="tooltip" data-placement="top" title="Delete" type="submit" class="deleteProduct btn btn-danger btn-sm mb-1 d-inline-block me-1" id="deleteBtn"><i class="bi bi-trash"></i></button> *@
                                 <button class="btn btn-danger btn-sm mb-1 d-inline-block me-1" id="deleteEntity" data-entity-type="Product" data-rid="1"><i class="bi bi-trash"></i></button>
                             </div>
                         </td>

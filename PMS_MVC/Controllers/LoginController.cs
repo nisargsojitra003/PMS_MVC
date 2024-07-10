@@ -27,6 +27,7 @@ namespace PMS_MVC.Controllers
         public IActionResult Login()
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            
             if (!string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("index", "dashboard");
@@ -65,23 +66,28 @@ namespace PMS_MVC.Controllers
                     HttpContext.Session.SetString("role", userResponse.UserRole);
 
                     ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    
                     identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
                     identity.AddClaim(new Claim(ClaimTypes.Role, userResponse.UserRole));
+                    
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                     TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.loginSuccessToaster;
+                    
                     return RedirectToAction(userResponse.ActionName, userResponse.ControllerName);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.loginErrorToaster;
+                    
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
                     TempData[nameof(NotificationTypeEnum.warning)] = NotificationMessages.loginWarningToaster;
+                    
                     return RedirectToAction("Login", "Login");
                 }
             }
@@ -96,6 +102,7 @@ namespace PMS_MVC.Controllers
         public IActionResult CreateAccount()
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            
             if (!string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("index", "dashboard");
@@ -125,16 +132,19 @@ namespace PMS_MVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     TempData[nameof(NotificationTypeEnum.success)] = NotificationMessages.accountCreatedSuccessToaster;
+                    
                     return RedirectToAction("Login", "Login");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.accountCreatedErrorToaster;
+                    
                     return RedirectToAction("Login", "Login");
                 }
                 else
                 {
                     TempData[nameof(NotificationTypeEnum.error)] = NotificationMessages.systemErrorToaster;
+                    
                     return View(userInfo);
                 }
             }

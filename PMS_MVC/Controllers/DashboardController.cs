@@ -31,21 +31,25 @@ namespace PMS_MVC.Controllers
         public async Task<IActionResult> Index()
         {
             string Token = HttpContext.Session.GetString("jwtToken") ?? "";
+            
             if (!string.IsNullOrEmpty(Token))
             {
                 DashboardData dashboardData = new DashboardData();
 
                 int? id = HttpContext.Session.GetInt32("userId");
-                HttpResponseMessage response = null;
+
+                HttpResponseMessage response = new HttpResponseMessage();
                 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
                
                 response = await client.GetAsync(client.BaseAddress + APIUrls.dashboard + id);
+                
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
                     dashboardData = JsonConvert.DeserializeObject<DashboardData>(data);
                 }
+                
                 return View(dashboardData);
             }
             else
@@ -87,6 +91,7 @@ namespace PMS_MVC.Controllers
             searchFilter.userId = HttpContext.Session.GetInt32("userId");
            
             int totalRecords = 0;
+            
             ViewBag.Currentpagesize = searchFilter.activityPageSize;
             
             List<UserActivity> activityList = new List<UserActivity>();
@@ -95,6 +100,7 @@ namespace PMS_MVC.Controllers
             
             query["activityPageNumber"] = searchFilter.activityPageNumber;
             query["activityPageSize"] = searchFilter.activityPageSize;
+            query["createdAtText"] = searchFilter.createdAtText?.ToString();
             query["searchActivity"] = searchFilter.searchActivity;
             query["sortTypeActivity"] = searchFilter.sortTypeActivity.ToString();
             query["userId"] = searchFilter.userId.ToString();
@@ -166,6 +172,7 @@ namespace PMS_MVC.Controllers
             {
                 HttpContext.Session.SetString("activityPageNumber", activityPageNumber.ToString());
             }
+
             return Json(new { success = true });
         }
 
@@ -181,6 +188,7 @@ namespace PMS_MVC.Controllers
                 HttpContext.Session.SetString("activityPageSize", activityPageSize.ToString());
                 ChangeActivityPage(1);
             }
+
             return Json(new { success = true });
         }
         #endregion

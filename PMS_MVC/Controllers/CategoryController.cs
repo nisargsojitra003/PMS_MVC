@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PMS_MVC.Models;
 using System.Collections.Specialized;
 using System.Net;
@@ -103,51 +104,48 @@ namespace PMS_MVC.Controllers
         /// <param name="type">it's either create or edit</param>
         /// <returns>return view</returns>
         [HttpGet]
-        public async Task<IActionResult> Get(int id, bool type)
+        public IActionResult Create()
         {
             try
             {
-                string token = HttpContext.Session.GetString("jwtToken") ?? "";
-                if (string.IsNullOrEmpty(token))
-                {
-                    return RedirectToAction("login","login");
-                }
-
-                if (type)
-                {
-                    Category category = new Category();
-                    category.Id = 0;
-                    return View("add", category);
-                }
-                else
-                {
-                    int? userId = HttpContext.Session.GetInt32("userId");
-                    HttpResponseMessage response = new HttpResponseMessage();
-                    if (!string.IsNullOrEmpty(token))
-                    {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    }
-
-                    response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
-                    Category addCategory = new Category();
-                    switch (response.StatusCode)
-                    {
-                        case HttpStatusCode.OK:
-                            string data = await response.Content.ReadAsStringAsync();
-                            addCategory = JsonConvert.DeserializeObject<Category>(data);
-                            return View("add", addCategory);
-
-                        case HttpStatusCode.NotFound:
-                            return View("invalid");
-
-                        default:
-                            return View("error");
-                    }
-                }
+                Category category = new Category();
+                category.Id = 0;
+                return View("add", category);
             }
             catch
             {
                 return NotFound();
+            }
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            int? userId = HttpContext.Session.GetInt32("userId");
+            
+            HttpResponseMessage response = new HttpResponseMessage();
+            
+            if (!string.IsNullOrEmpty(token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            response = await client.GetAsync(client.BaseAddress + APIUrls.getCategory + id + APIUrls.userId + userId);
+            
+            Category addCategory = new Category();
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    string data = await response.Content.ReadAsStringAsync();
+                    addCategory = JsonConvert.DeserializeObject<Category>(data);
+                    return View("add", addCategory);
+
+                case HttpStatusCode.NotFound:
+                    return View("invalid");
+
+                default:
+                    return View("error");
             }
         }
 
@@ -170,6 +168,7 @@ namespace PMS_MVC.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
+                
                 content.Add(new StringContent(category.Name), nameof(category.Name));
                 content.Add(new StringContent(category.Code), nameof(category.Code));
                 content.Add(new StringContent(category.Description), nameof(category.Description));
@@ -204,13 +203,15 @@ namespace PMS_MVC.Controllers
         /// <param name="Id">Category id</param>
         /// <returns>return category details</returns>
         [HttpGet]
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> View(int id)
         {
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
+            
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("login", "login");
             }
+            
             int? userId = HttpContext.Session.GetInt32("userId");
 
             HttpResponseMessage response = new HttpResponseMessage();
@@ -252,15 +253,18 @@ namespace PMS_MVC.Controllers
             string token = HttpContext.Session.GetString("jwtToken") ?? "";
 
             HttpResponseMessage response = new HttpResponseMessage();
+            
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
+            
             string data = JsonConvert.SerializeObject(id);
 
             StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
 
             response = await client.PostAsync(client.BaseAddress + APIUrls.deleteCategory + id, content);
+            
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
@@ -283,6 +287,7 @@ namespace PMS_MVC.Controllers
             {
                 HttpContext.Session.SetString("catPageNumber", pageNumberCategory.ToString());
             }
+
             return Json(new { success = true });
         }
 
@@ -293,6 +298,7 @@ namespace PMS_MVC.Controllers
                 HttpContext.Session.SetString("catPageSize", catPageSize.ToString());
                 ChangePage(1);
             }
+
             return Json(new { success = true });
         }
         #endregion

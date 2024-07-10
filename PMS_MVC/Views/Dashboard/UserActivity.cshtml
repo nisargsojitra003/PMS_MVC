@@ -11,8 +11,12 @@
     </div>
     <div class="col-md-12 mb-3">
         <div class="form-floating">
-            <input class="form-control dark-mode2" type="text" placeholder="Activity" aria-label="Search" id="searchActivityTab" onkeyup="searchActivity()" maxlength="25">
+            <input class="form-control dark-mode2" type="text" placeholder="Activity" aria-label="Search" id="searchActivityTab" maxlength="25">
             <label for="searchActivityTab" class="ms-2">Search Activity</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input class="form-control dark-mode2" type="text" placeholder="Time" aria-label="Search" id="searchCreatedAtTab" maxlength="25">
+            <label for="searchCreatedAtTab" class="ms-2">Time</label>
         </div>
     </div>
     <div class="col-12 mb-3 d-flex justify-content-between">
@@ -32,7 +36,9 @@
     });
 
     $(document).on('click', '#activityClear', function () {
-        $('#searchActivityTab').val('');
+        $('#searchActivityTab,#searchCreatedAtTab').val('');
+        DisplayLoader();
+        HideLoader();
         $('#activityListdata').load("/dashboard/userActivityShared");
     });
 </script>

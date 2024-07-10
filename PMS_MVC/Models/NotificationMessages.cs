@@ -3,10 +3,10 @@
     public class NotificationMessages
     {
         //common notification string
-        public string savedSuccessToaster = "{1} has been saved Successfully!";
-        public string createSuccessToaster = "has been created Successfully!";
-        public string editSuccessToaster = "{1} has been edited Successfully!";
-        public string deleteSuccessToaster = "{1} has been deleted Successfully!";
+        public string savedSuccessToaster = "{1} has been saved successfully!";
+        public string createSuccessToaster = "has been created successfully!";
+        public string editSuccessToaster = "{1} has been edited successfully!";
+        public string deleteSuccessToaster = "{1} has been deleted successfully!";
         public string unabledeleteToaster = "Selected Category have already products so you can't delete this category!";
         //System error common notification string
         public string systemErrorToaster = "Something went wrong!";

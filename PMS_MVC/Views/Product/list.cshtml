@@ -14,7 +14,7 @@
         <h4 class="text-info">Product List</h4>
         <div class="col-md-4  mb-3">
             <div class="form-floating">
-                <input class="form-control dark-mode2" type="text" placeholder="Search Product" aria-label="Search" id="searchProduct" onkeyup="searchProcudtName()" maxlength="25">
+                <input class="form-control dark-mode2" type="text" placeholder="Search Product" aria-label="Search" id="searchProduct" maxlength="25">
                 <label for="searchProduct" class="ms-2">Search Product</label>
             </div>
         </div>
@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-4  mb-3">
             <div class="form-floating">
-                <select class="form-select ProfessionsDropdown" id="searchCategory" onchange="searchProductCategory()">
+                <select class="form-select ProfessionsDropdown" id="searchCategory" onchange="searchCategoryTag()">
                     <option value="0">All Category</option>
                     @foreach (var category in Model.categories)
                     {
@@ -43,7 +43,7 @@
         </div>
         <div class="col-md-12  mb-3">
             <div class="form-floating">
-                <input class="form-control dark-mode2" type="text" placeholder="Provider Name" aria-label="Search" id="searchDescription" onkeyup="searchDescription()" maxlength="499">
+                <input class="form-control dark-mode2" type="text" placeholder="Provider Name" aria-label="Search" id="searchDescription" maxlength="499">
                 <label for="searchDescription" class="ms-2">Description</label>
             </div>
         </div>
@@ -74,7 +74,9 @@
 
     $(document).on('click', '#categoryProductClear', function () {
         $('#searchProduct,#searchCategoryTag,#searchDescription').val('');
+        DisplayLoader();
         $('#searchCategory').val(0);
         $('#productListdata').load("/product/ProductListshared");
+        HideLoader();
     });
 </script>
