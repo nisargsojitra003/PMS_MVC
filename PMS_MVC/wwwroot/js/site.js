@@ -198,8 +198,13 @@ function changeProductpagesize() {
     $.ajax({
         url: "/Product/ChangePageSize",
         data: { pageSizeProduct: pageSizeProduct },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#productListdata").load("ProductListshared");
             }
         }
@@ -210,8 +215,13 @@ function changePageInProductTable(productPageNumber) {
     $.ajax({
         url: "/Product/ChangePage",
         data: { productPageNumber: productPageNumber },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#productListdata").load("ProductListshared");
             }
         }
@@ -224,8 +234,13 @@ function changePageSize() {
     $.ajax({
         url: "/Category/ChangePageSize",
         data: { catPageSize: catPageSize },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#categoryListdata").load("/Category/CategoryListshared"); // Ensure this URL is correct
             }
         }
@@ -236,8 +251,13 @@ function changePageInTable(pageNumberCategory) {
     $.ajax({
         url: "/Category/ChangePage",
         data: { pageNumberCategory: pageNumberCategory },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#categoryListdata").load("CategoryListshared");
             }
         }
@@ -250,8 +270,13 @@ function changePageSizeActivity() {
     $.ajax({
         url: "/dashboard/ChangeActivityPageSize",
         data: { activityPageSize: activityPageSize },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#activityListdata").load("/dashboard/userActivityShared"); // Ensure this URL is correct
             }
         }
@@ -262,8 +287,13 @@ function changePageInActivityTable(activityPageNumber) {
     $.ajax({
         url: "/dashboard/ChangeActivityPage",
         data: { activityPageNumber: activityPageNumber },
+        beforeSend: function () {
+            console.log("searchloader");
+            DisplayLoader();
+        },
         success: function (response) {
             if (response.success) {
+                HideLoader();
                 $("#activityListdata").load("/dashboard/userActivityShared");
             }
         }
@@ -332,6 +362,13 @@ function OpenCategoryList() {
     }, 1000);
 }
 
+function OpenUserActivityList() {
+    DisplayLoader();
+    setTimeout(function () {
+        window.location.href = "/dashboard/UserActivity";
+    }, 1000);
+}
+
 function OpenProductList() {
     DisplayLoader();
     setTimeout(function () {
@@ -367,22 +404,22 @@ function GetProductDetailById(id) {
     }, 1000);
 }
 
-function searchCategory() {
+//function searchCategory() {
 
-    var searchName = $("#searchCategoryTab").val();
-    var searchCode = $("#searchCategoryCodeTab").val();
-    var description = $("#searchCategoryDescription").val();
+//    var searchName = $("#searchCategoryTab").val();
+//    var searchCode = $("#searchCategoryCodeTab").val();
+//    var description = $("#searchCategoryDescription").val();
 
-    let url = '/Category/CategoryListshared';
-    $.ajax({
-        url: url,
-        data: { searchName: searchName, searchCode: searchCode, description: description },
-        type: 'GET',
-        success: function (result) {
-            $("#categoryListdata").html(result);
-        }
-    });
-}
+//    let url = '/Category/CategoryListshared';
+//    $.ajax({
+//        url: url,
+//        data: { searchName: searchName, searchCode: searchCode, description: description },
+//        type: 'GET',
+//        success: function (result) {
+//            $("#categoryListdata").html(result);
+//        }
+//    });
+//}
 
 function searchCode() {
 
@@ -523,12 +560,10 @@ function DisplayLoader() {
 }
 
 function HideLoader() {
-    //console.log("hide");
-    //$("#overlay").hide();
     setTimeout(function () {
         console.log("hide");
         $("#overlay").hide();
-    }, 1000);
+    }, 500);
 }
 
 $(window).on("beforeunload", function () {
