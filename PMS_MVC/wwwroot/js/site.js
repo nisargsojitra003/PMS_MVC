@@ -577,3 +577,115 @@ $(document).on("submit", "form", function () {
 $(document).ready(function () {
     HideLoader();
 });
+
+//function translatePage() {
+//    var language = $('#languageSelect').val();
+//    var elementsToTranslate = $('[data-translate]');
+
+//    elementsToTranslate.each(function () {
+//        var key = $(this).attr('data-translate');
+//        var text = $(this).text();
+
+//        // Translate using the API
+//        translateText(text, language, (translatedText) => {
+//            $(this).text(translatedText);
+//        });
+//    });
+//}
+
+//function translateText(text, targetLanguage, callback) {
+//    $.ajax({
+//        url: `https://translation.googleapis.com/language/translate/v2`,
+//        type: 'POST',
+//        contentType: 'application/json',
+//        data: JSON.stringify({
+//            q: text,
+//            target: targetLanguage,
+//            key: 'AIzaSyCvWxXoM0g00lJ81Vjp7ifD3dNWEUQ0ldA'
+//        }),
+//        success: function (response) {
+//            var translatedText = response.data.translations[0].translatedText;
+//            callback(translatedText);
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error:', status, error);
+//            window.alert('Translation failed: ' + xhr.responseText);
+//        }
+//    });
+//}
+
+//function translatePage() {
+//    var language = $('#languageSelect').val();
+//    var elementsToTranslate = $('[data-translate]');
+
+//    elementsToTranslate.each(function () {
+//        var element = $(this);
+//        var text = element.text();
+
+//        // Translate using the API
+//        translateText(text, language, function (translatedText) {
+//            element.text(translatedText);
+//        });
+//    });
+//}
+
+//function translateText(text, targetLanguage, callback) {
+//    var apiKey = 'AIzaSyCvWxXoM0g00lJ81Vjp7ifD3dNWEUQ0ldA';
+//    var endpoint = 'https://translation.googleapis.com/language/translate/v2';
+
+//    $.ajax({
+//        url: endpoint,
+//        type: 'POST',
+//        contentType: 'application/json',
+//        data: JSON.stringify({
+//            q: text,
+//            target: targetLanguage
+//        }),
+//        headers: {
+//            'Authorization': 'Bearer' + apiKey
+//        },
+//        success: function (response) {
+//            var translatedText = response.data.translations[0].translatedText;
+//            callback(translatedText);
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error:', status, error);
+//            console.log('Translation failed: ' + xhr.responseText);
+//        }
+//    });
+//}
+
+
+//function translatePage() {
+//    var language = $('#languageSelect').val();
+//    var elementsToTranslate = $('[data-translate]');
+
+//    elementsToTranslate.each(function () {
+//        var element = $(this);
+//        var text = element.text();
+
+//        translateText(text, language, function (translatedText) {
+//            element.text(translatedText);
+//        });
+//    });
+//}
+
+//function translateText(text, targetLanguage, callback) {
+//    $.ajax({
+//        url: '/Login/Translate', 
+//        type: 'POST',
+//        contentType: 'application/json',
+//        data: JSON.stringify({
+//            text: text,
+//            targetLanguage: targetLanguage
+//        }),
+//        success: function (response) {
+//            var translatedText = response.data.translations[0].translatedText;
+//            callback(translatedText);
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error:', status, error);
+//            alert('Translation failed: ' + xhr.responseText);
+//        }
+//    });
+//}

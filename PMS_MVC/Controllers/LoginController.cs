@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PMS_MVC.Models;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 
 namespace PMS_MVC.Controllers
 {
@@ -150,5 +152,36 @@ namespace PMS_MVC.Controllers
             }
         }
         #endregion
+
+        [HttpPost]
+        public async Task<ActionResult> Translate(string text, string targetLanguage)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string _accessToken = "AIzaSyCvWxXoM0g00lJ81Vjp7ifD3dNWEUQ0ldA";
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+
+                    var translationRequest = new
+                    {
+                        q = text,
+                        target = targetLanguage,
+                    };
+
+                    var jsonRequest = JsonConvert.SerializeObject(translationRequest);
+                    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync("https://translation.googleapis.com/language/translate/v2", content);
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    return Content(jsonResponse, "application/json");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content($"Translation failed: {ex.Message}");
+            }
+        }
     }
 }

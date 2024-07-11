@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using PMS_MVC.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -9,12 +11,29 @@ builder.Services.AddHttpClient("MyApiClient", client =>
 {
     client.BaseAddress = new Uri(baseUrl);
 });
+
+builder.Services.AddLocalization(o => { o.ResourcesPath = "Notifications"; });
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture("de-DE");
+    options.AddSupportedUICultures("en-US", "de-DE");
+    options.FallBackToParentUICultures = true;
+    options.RequestCultureProviders.Clear();
+});
+
+builder.Services.AddControllersWithViews()
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+        .AddDataAnnotationsLocalization();
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<NotificationMessages>();
 builder.Services.AddScoped<APIUrls>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IViewLocalizer, ViewLocalizer>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -83,6 +102,15 @@ app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
 app.UseAuthorization();
+
+string[] supportedCultures = new[] { "de-DE","en-US" };
+RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
+
 
 app.MapControllerRoute(
     name: "default",

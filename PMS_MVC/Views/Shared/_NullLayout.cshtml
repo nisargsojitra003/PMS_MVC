@@ -18,7 +18,16 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-
+    @* <div class="container mt-3">
+        <div class="d-flex justify-content-start">
+            <div class="translate-toggle">
+                <button id="translateButton" class="translate-button btn btn-outline-success">
+                    <i class="bi bi-translate"></i>
+                </button>
+                <div id="google_translate_element" class="translate-dropdown"></div>
+            </div>
+        </div>
+    </div> *@
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -26,6 +35,30 @@
         </main>
     </div>
 
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                { pageLanguage: 'en' },
+                'google_translate_element'
+            );
+        }
+
+        $(document).ready(function () {
+            $('#translateButton').on('click', function () {
+                $('#google_translate_element').toggleClass('visible');
+                $(this).html(function (i, html) {
+                    return html.includes("bi-translate")
+                        ? '<i class="bi bi-x-circle"></i>'
+                        : '<i class="bi bi-translate"></i>';
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript"
+            src="https://translate.google.com/translate_a/element.js?
+cb=googleTranslateElementInit">
+    </script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

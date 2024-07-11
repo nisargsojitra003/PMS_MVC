@@ -1,4 +1,6 @@
-﻿@model PMS_MVC.Models.UserInfo;
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model PMS_MVC.Models.UserInfo;
 @{
     Layout = "_NullLayout";
     ViewData["Title"] = "Login Page";
@@ -7,7 +9,7 @@
 <partial name="_Notification" />
 <div class="container d-flex justify-content-center align-items-center">
     <div class="shadow-lg rounded bg-white p-4 w-100" style="max-width: 600px;">
-        <div class="formTitle mt-3" id="formTile"><h5>Sign In</h5></div>
+        <div class="formTitle mt-3" id="formTile"><h5>@Localizer["Sign In"]</h5></div>
         <form asp-action="login" asp-controller="login"  method="post" class="dark-mode2" id="LoginInSystem">
             <div class="row mb-3">
                 <div class="col-12">
