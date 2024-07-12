@@ -441,7 +441,7 @@ namespace PMS_MVC.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
 
-            return View(editProduct);
+            return View("detail",editProduct);
         }
         #endregion
 

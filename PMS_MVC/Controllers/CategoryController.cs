@@ -230,7 +230,7 @@ namespace PMS_MVC.Controllers
                 case HttpStatusCode.OK:
                     string data = await response.Content.ReadAsStringAsync();
                     addCategory = JsonConvert.DeserializeObject<Category>(data);
-                    return View("add",addCategory);
+                    return View("detail",addCategory);
 
                 case HttpStatusCode.NotFound:
                     return View("invalid");
